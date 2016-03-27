@@ -1,0 +1,80 @@
+@require "lib/layout"
+
+#content
+  #view
+    position relative
+    width 100%
+    height 100%
+    text-align center
+    background-color #000
+    opacity .8
+
+    .img-thumbnail
+      height 100%
+
+    .message
+      position absolute
+      width 100%
+      height 20%
+      bottom 0
+      padding 2%
+      font-size 40px
+
+  #listLayout
+    position absolute
+    width 100%
+    height 25%
+    bottom 0
+
+    #list
+      position relative
+      width 100%
+      height 100%
+      z-index 1
+      background-color #000
+      opacity .8
+      overflow-x scroll
+      -webkit-transition-duration .3s
+      -webkit-transform translateY(100%)
+
+      .item
+        position relative
+        float left
+        width 150px
+        height 100%
+
+        .thumbnail
+          width 100%
+          height 100%
+          border-radius 0
+          background-color #000
+          border solid 1px #333
+          padding initial
+
+          .img-thumbnail
+            width 100%
+            height 100%
+            border-radius 0
+
+          .explain
+            position absolute
+            width 100%
+            height 20%
+            bottom 0
+
+            span.message
+              position relaitve
+              float left
+              width 100%
+              height 100%
+              background-color #000
+              color #fff
+              font-size 11px
+              opacity .8
+
+      .item:hover, .item.active
+        border solid 2px #0054FF
+
+  #listLayout:hover
+    #list
+      -webkit-transform translateY(0)

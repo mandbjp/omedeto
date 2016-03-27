@@ -1,0 +1,20 @@
+extends layout
+
+block style
+  link(rel="stylesheet", href="/css/view.css")
+
+block content
+
+block script
+  script(src="/js/view.js")
+  script(type="text/v-template")#template
+    #view
+      img.img-thumbnail(:src="current.imagePath")
+      .message(v-text="current.message")
+    #listLayout
+      #list
+        .item(v-for="movie in movies", @click="selectItem(movie.id)", :class="{active: movie.selected}")
+          .thumbnail
+            img.img-thumbnail(:src="movie.imagePath")
+            .explain
+              span.message(v-text="movie.message")

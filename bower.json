@@ -1,0 +1,8 @@
+{
+  "name": "omedeto",
+  "version": "0.0.1",
+  "dependencies": {
+    "jquery": "2.2.2",
+    "bootstrap": "3.3.6"
+  }
+}
