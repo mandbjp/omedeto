@@ -1,0 +1,31 @@
+extends layout
+
+block style
+  link(rel="stylesheet", href="/css/upload.css")
+
+block content
+
+block script
+  script(src="/js/upload.js")
+  script(type="text/v-template")#template
+    #header
+      #title="Omedeto App"
+    #main
+      #layout
+        .form-horizontal
+          .form-group
+            .img
+              img.img-thumbnail(:src="imagePath")
+            button.shooting.btn.btn-success
+              span.glyphicon.glyphicon-camera
+              span.text="撮影する"
+          .form-group
+            textarea.input-sm(
+              v-model="message"
+              row="5"
+              placeholder="お祝いメッセージを入力"
+            )
+          .form-group
+            button.send.btn.btn-success
+              span.glyphicon.glyphicon-envelope
+              span.text="送る"

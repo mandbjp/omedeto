@@ -1,7 +1,7 @@
-# view画面表示
+# upload画面表示
 exports.index = (req, res) ->
   accept = req.headers.accept
   if accept.match "html"
-    res.render "view",
+    res.render "upload",
       pretty: true
   return
