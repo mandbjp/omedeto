@@ -1,5 +1,5 @@
 doctype html
-html
+html(lang=lang)
   head
     meta(charset="UTF-8")
     meta(content="width=device-width, minimum-scale=1.0, maximum-scale=1.0", name="viewport")
@@ -9,6 +9,8 @@ html
   body
     #content
       block content
+    #footer
+      block footer
 
     script(src="/js/vendor.js")
     block script

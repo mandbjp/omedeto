@@ -2,10 +2,19 @@ extends layout
 
 block style
   link(rel="stylesheet", href="/css/upload.css")
+  link(rel="stylesheet", href="//cdn.jsdelivr.net/jquery.fileupload/9.5.2/css/jquery.fileupload.css")
 
 block content
 
+block footer
+  button.shooting.btn.btn-success.fileinput-button
+    input#upload(type="file", name="file", data-url="./upload/image")
+    span.glyphicon.glyphicon-camera
+    span.text="撮影する"
+ 
 block script
+  script(src="//cdn.jsdelivr.net/jquery.fileupload/9.5.2/js/vendor/jquery.ui.widget.js")
+  script(src="//cdn.jsdelivr.net/jquery.fileupload/9.5.2/js/jquery.fileupload.js")
   script(src="/js/upload.js")
   script(type="text/v-template")#template
     #header
@@ -16,7 +25,8 @@ block script
           .form-group
             .img
               img.img-thumbnail(:src="imagePath")
-            button.shooting.btn.btn-success
+            button.shooting.btn.btn-success.fileinput-button
+              input#upload(type="file", name="file", data-url="./upload/image")
               span.glyphicon.glyphicon-camera
               span.text="撮影する"
           .form-group
@@ -26,6 +36,6 @@ block script
               placeholder="お祝いメッセージを入力"
             )
           .form-group
-            button.send.btn.btn-success
+            button.send.btn.btn-success(@click="send")
               span.glyphicon.glyphicon-envelope
               span.text="送る"

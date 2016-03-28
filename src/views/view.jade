@@ -6,6 +6,7 @@ block style
 block content
 
 block script
+  script(src="/primus/primus.js")
   script(src="/js/view.js")
   script(type="text/v-template")#template
     #view
@@ -13,7 +14,7 @@ block script
       .message(v-text="current.message")
     #listLayout
       #list
-        .item(v-for="movie in movies", @click="selectItem(movie.id)", :class="{active: movie.selected}")
+        span.item(v-for="movie in movies", @click="selectItem(movie._id)", :class="{active: movie.selected}")
           .thumbnail
             img.img-thumbnail(:src="movie.imagePath")
             .explain
