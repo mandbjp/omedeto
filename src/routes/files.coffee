@@ -3,14 +3,14 @@ crypto = require "crypto"
 fs = require "fs"
 
 # ファイル格納
-exports.upload = (req, res) ->
+exports.create = (req, res) ->
   file = req.files.file
   filePath = file.path
   md5sum = crypto.createHash "md5"
   md5sum.update "#{filePath}"
   fileName = md5sum.digest "hex"
 
-  mongo.writeFile 'img', fileName, filePath, (err, data) ->
+  mongo.writeFile 'file', fileName, filePath, (err, data) ->
     if err
       res.status 500
         .send err
@@ -22,12 +22,10 @@ exports.upload = (req, res) ->
   return
 
 # ファイル取得
-exports.download = (req, res) ->
-  fileName = req.params.fileName
+exports.show = (req, res) ->
+  fileName = req.params.id
 
-  #res.status 200
-  #  .send fileName
-  mongo.readFileStream "img", fileName, (err, data) ->
+  mongo.readFileStream "file", fileName, (err, data) ->
     if err
       res.status 500
         .send err

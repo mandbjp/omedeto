@@ -3,6 +3,7 @@ $ ->
   Ajax = require "./lib/ajax"
   Q = require "q"
   Promise = Q.Promise
+  files = new Ajax "files"
   movies = new Ajax "movies"
 
   # upload画面のVueModel
@@ -11,24 +12,36 @@ $ ->
     template: "#template"
     replace: false
     data:
-      imagePath: ""
+      videoPath: ""
       thumbnail: ""
       message: ""
     created: () ->
-      @imagePath = "/images/noimage.png"
-
       $("#upload").fileupload
         done: (e, result) =>
           fileName = result.jqXHR.responseJSON.fileName
-          console.log fileName
           @thumbnail = fileName
-          @imagePath = "/images/#{fileName}/120x120"
+          @videoPath = "/files/#{fileName}"
           return
         fail: (e, data) ->
           console.log e
           return
       return
     methods:
+      upload: (e) ->
+        fileList = e.target.files
+        param = new FormData()
+        param.append "file", fileList[0]
+        
+        files
+        .create param
+        .then (result) =>
+          console.log result
+          return
+        .catch (err) ->
+          console.log err
+          return
+        return
+
       # 送るボタンクリック
       send: () ->
         param =

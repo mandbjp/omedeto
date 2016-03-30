@@ -38,11 +38,6 @@ app.use multipart
   uploadDir: __dirname + "/upload"
   limit: "1000mb"
 
-# ファイルのUpload / Download
-image = require "./routes/image"
-app.post "/upload/image", image.upload
-app.get "/images/:fileName/:size", image.download
-
 # Web-APIの各ターゲットに処理をマップする
 files = []
 for val in fs.readdirSync "./routes"
