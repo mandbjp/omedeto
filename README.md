@@ -2,7 +2,7 @@
 
 ### Dependence ###
 
-+ Node.js v0.10.xx or v0.12.xx
++ Node.js v0.12.xx
 
 事前にグローバルインストールをしておいてください。
 (mongoWrpperがES6で書いてあるため、babel5のインストールが要る)
