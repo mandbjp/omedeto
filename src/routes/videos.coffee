@@ -44,13 +44,13 @@ getData = (query) ->
 setData = (data) ->
   return Promise (resolve, reject) ->
     sid = data.sid
-    fid = data.fid
+    vid = data.vid
     thumbnail = data.thumbnail
     message = data.message
 
     doc =
       sid: sid
-      fid: fid
+      vid: vid
 
     if thumbnail
       doc.thumbnail = thumbnail
@@ -118,7 +118,7 @@ exports.create = (req, res) ->
   .then (result) ->
     status = if result.ok then 200 else 400
     if status is 200
-      result.fid = param.fid
+      result.vid = param.vid
       primus.send result
 
     res.status status
