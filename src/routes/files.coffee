@@ -1,36 +1,39 @@
 mongo = require "./lib/mongo"
-crypto = require "crypto"
 fs = require "fs"
 
 # ファイル格納
 exports.create = (req, res) ->
   file = req.files.file
   filePath = file.path
-  md5sum = crypto.createHash "md5"
-  md5sum.update "#{filePath}"
-  fileName = md5sum.digest "hex"
+  stream = fs.createReadStream filePath
 
-  mongo.writeFile 'file', fileName, filePath, (err, data) ->
-    if err
-      res.status 500
-        .send err
-    else
-      res.status 200
-        .send fileName: fileName
+  mongo.insertGridFS 'file', stream, {}
+  .then (result) ->
+    data =
+      fid: result
+    res.status 200
+      .send data
     fs.unlink filePath
+    return
+  .catch (err) ->
+    res.status 500
+      .send err
     return
   return
 
 # ファイル取得
 exports.show = (req, res) ->
-  fileName = req.params.id
+  _id = req.params.id
 
-  mongo.readFileStream "file", fileName, (err, data) ->
-    if err
-      res.status 500
-        .send err
-    else
-      res.status 200
-        .send data
-      return
+  mongo.findGridFS "file", _id, {}
+  .then (result) ->
+    if result
+      data = result.data
+    res.status 200
+      .send data
     return
+  .catch (err) ->
+    res.status 500
+      .send err
+    return
+  return

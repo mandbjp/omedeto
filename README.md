@@ -5,13 +5,13 @@
 + Node.js v0.10.xx or v0.12.xx
 
 事前にグローバルインストールをしておいてください。
+(mongoWrpperがES6で書いてあるため、babel5のインストールが要る)
 
 ```bash
 $ nvm install 0.10.xx
 $ nvm use 0.10.xx
 $ npm install -g gulp
 $ npm install -g bower
-# mongoWrpperがES6で書いてあるため、babel5のインストールが要る
 $ npm install -g babel@5
 ```
 

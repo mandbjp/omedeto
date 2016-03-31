@@ -6,6 +6,8 @@ primus = require "./lib/primus"
 getData = (query) ->
   return Promise (resolve, reject) ->
     _id = query._id
+    type = query.type
+
     crt =
       sid: "omedeto"
 
@@ -16,23 +18,40 @@ getData = (query) ->
       sort:
         sntdt: 1
 
-    mongo.find "omedeto", "movie", crt, {}, opt, true, (err, result) ->
-      if err
-        reject result
-      else
-        resolve result
-      return
+    flag = if type is "count" then false else true
 
+    mongo.find "omedeto", "movie", crt, {}, opt
+    .then (cursor) ->
+      if flag
+        cursor.toArray()
+        .then resolve, reject
+      else
+        result = cursor.count false
+        .then (cnt) ->
+          result =
+            count: cnt
+          resolve result
+          return
+        .catch (err) ->
+          reject err
+          return
+      return
+    .catch (err) ->
+      reject err
+      return
     return
 
 setData = (data) ->
   return Promise (resolve, reject) ->
     sid = data.sid
+    fid = data.fid
     thumbnail = data.thumbnail
     message = data.message
 
     doc =
       sid: sid
+      fid: fid
+
     if thumbnail
       doc.thumbnail = thumbnail
 
@@ -43,12 +62,13 @@ setData = (data) ->
 
     opt = {}
 
-    mongo.insert "omedeto", "movie", doc, opt, (err, result) ->
-      if err
-        console.log err
-        reject result
-      else
-        resolve result
+    mongo.insert "omedeto", "movie", doc, opt
+    .then (result) ->
+      resolve result
+      return
+    .catch (err) ->
+      reject err
+      return
     return
 
 
@@ -94,14 +114,15 @@ exports.create = (req, res) ->
   param.sid = "omedeto"
 
   # Validation 追加予定
-
   setData param
   .then (result) ->
-    status = if result.insertedCount > 0 then 200 else 400
+    status = if result.ok then 200 else 400
     if status is 200
-      primus.send result.ops
+      result.fid = param.fid
+      primus.send result
+
     res.status status
-      .send result.ops
+      .send result
     return
   .catch (err) ->
     res.status err.code

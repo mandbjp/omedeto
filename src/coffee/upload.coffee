@@ -14,7 +14,7 @@ $ ->
     replace: false
     data:
       videoPath: ""
-      thumbnail: ""
+      fid: ""
       message: ""
     created: () ->
       return
@@ -28,22 +28,23 @@ $ ->
         @.$http.post "/files", param, {}
         .then (result) =>
           if result.status is 200
-            fileName = result.data.fileName
-            if fileName
-              @videoPath = "/files/#{fileName}"
+            @fid = result.data.fid
+            if @fid
+              @videoPath = "/files/#{@fid}"
           return
         return
 
       # 送るボタンクリック
       send: () ->
         param =
-          thumbnail: @thumbnail
+          fid: @fid
           message: @message
 
         movies
         .create param
         .then (result) =>
-          if result.length
+          console.log result
+          if result.ok
             alert "ご協力ありがとうございます。"
           return
         .catch (err) ->
