@@ -20,7 +20,7 @@ getData = (query) ->
 
     flag = if type is "count" then false else true
 
-    mongo.find "omedeto", "movie", crt, {}, opt
+    mongo.find "omedeto", "video", crt, {}, opt
     .then (cursor) ->
       if flag
         cursor.toArray()
@@ -62,7 +62,7 @@ setData = (data) ->
 
     opt = {}
 
-    mongo.insert "omedeto", "movie", doc, opt
+    mongo.insert "omedeto", "video", doc, opt
     .then (result) ->
       resolve result
       return

@@ -5,7 +5,7 @@ $ ->
   Q = require "q"
   Promise = Q.Promise
   files = new Ajax "files"
-  movies = new Ajax "movies"
+  videos = new Ajax "videos"
 
   # upload画面のVueModel
   vm = new Vue
@@ -40,7 +40,7 @@ $ ->
           fid: @fid
           message: @message
 
-        movies
+        videos
         .create param
         .then (result) =>
           console.log result
