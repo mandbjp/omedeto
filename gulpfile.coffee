@@ -106,6 +106,7 @@ gulp.task "watch", () ->
 gulp.task "nodemon", () ->
   nodemon
     script: "./app.js"
+    nodeArgs: ["--harmony"]
     env:
       NODE_ENV: "development"
 
