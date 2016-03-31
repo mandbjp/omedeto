@@ -1,5 +1,6 @@
 $ ->
   Vue =  require "vue"
+  Vue.use require "vue-resource"
   Ajax = require "./lib/ajax"
   Q = require "q"
   Promise = Q.Promise
@@ -16,29 +17,20 @@ $ ->
       thumbnail: ""
       message: ""
     created: () ->
-      $("#upload").fileupload
-        done: (e, result) =>
-          fileName = result.jqXHR.responseJSON.fileName
-          @thumbnail = fileName
-          @videoPath = "/files/#{fileName}"
-          return
-        fail: (e, data) ->
-          console.log e
-          return
       return
     methods:
+      # 撮影するボタンクリック
       upload: (e) ->
         fileList = e.target.files
         param = new FormData()
         param.append "file", fileList[0]
         
-        files
-        .create param
+        @.$http.post "/files", param, {}
         .then (result) =>
-          console.log result
-          return
-        .catch (err) ->
-          console.log err
+          if result.status is 200
+            fileName = result.data.fileName
+            if fileName
+              @videoPath = "/files/#{fileName}"
           return
         return
 

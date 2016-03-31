@@ -9,8 +9,6 @@ block content
 block footer
  
 block script
-  script(src="//cdn.jsdelivr.net/jquery.fileupload/9.5.2/js/vendor/jquery.ui.widget.js")
-  script(src="//cdn.jsdelivr.net/jquery.fileupload/9.5.2/js/jquery.fileupload.js")
   script(src="/js/upload.js")
   script(type="text/v-template")#template
     #header
@@ -22,7 +20,7 @@ block script
             .video
               video(:src="videoPath", loop, autoplay ,preload="true", controls)
             button.shooting.btn.btn-success.fileinput-button
-              input#upload(type="file", @change="upload")
+              input#upload(type="file", name="file", @change="upload")
               span.glyphicon.glyphicon-camera
               span.text="撮影する"
           .form-group
