@@ -10,12 +10,13 @@ block script
   script(src="/js/view.js")
   script(type="text/v-template")#template
     #view
-      img.img-thumbnail(:src="current.imagePath")
-      .message(v-text="current.message")
+      .video(v-for="video in videos")
+        video(:src="video.videoPath", :poster="video.imagePath", autoplay, preload="metadata", controls)
+      .nickname(v-text="video.nickname")
     #listLayout
       #list
-        span.item(v-for="movie in movies", @click="selectItem(movie._id)", :class="{active: movie.selected}")
+        span.item(v-for="video in videos", @click="selectItem(video._id)", :class="{active: video.selected}")
           .thumbnail
-            img.img-thumbnail(:src="movie.imagePath")
+            img.img-thumbnail(:src="video.imagePath")
             .explain
-              span.message(v-text="movie.message")
+              span.nickname(v-text="video.nickname")
