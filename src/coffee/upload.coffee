@@ -1,9 +1,11 @@
 $ ->
   Vue =  require "vue"
+  Vue.use require "vue-resource"
   Ajax = require "./lib/ajax"
   Q = require "q"
   Promise = Q.Promise
-  movies = new Ajax "movies"
+  files = new Ajax "files"
+  videos = new Ajax "videos"
 
   # upload画面のVueModel
   vm = new Vue
@@ -11,34 +13,37 @@ $ ->
     template: "#template"
     replace: false
     data:
-      imagePath: ""
-      thumbnail: ""
+      videoPath: ""
+      vid: ""
       message: ""
     created: () ->
-      @imagePath = "/images/noimage.png"
-
-      $("#upload").fileupload
-        done: (e, result) =>
-          fileName = result.jqXHR.responseJSON.fileName
-          console.log fileName
-          @thumbnail = fileName
-          @imagePath = "/images/#{fileName}/120x120"
-          return
-        fail: (e, data) ->
-          console.log e
-          return
       return
     methods:
+      # 撮影するボタンクリック
+      upload: (e) ->
+        fileList = e.target.files
+        param = new FormData()
+        param.append "file", fileList[0]
+        
+        @.$http.post "/files", param, {}
+        .then (result) =>
+          if result.status is 200
+            @vid = result.data.fid
+            if @vid
+              @videoPath = "/files/#{@vid}"
+          return
+        return
+
       # 送るボタンクリック
       send: () ->
         param =
-          thumbnail: @thumbnail
+          vid: @vid
           message: @message
 
-        movies
+        videos
         .create param
         .then (result) =>
-          if result.length
+          if result.ok
             alert "ご協力ありがとうございます。"
           return
         .catch (err) ->

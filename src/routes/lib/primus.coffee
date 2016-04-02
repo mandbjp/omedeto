@@ -24,7 +24,8 @@ exports.init = (server) ->
 
 exports.send = (data) ->
   ms =
-    _id: data[0]._id
+    fid: data.fid
+
   primus
     .in room
     .write ms
