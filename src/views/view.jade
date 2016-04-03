@@ -11,8 +11,8 @@ block script
   script(type="text/v-template")#template
     #view
       .video(v-for="video in videos")
-        video(:src="video.videoPath", :poster="video.imagePath", autoplay, preload="metadata", controls)
-      .nickname(v-text="video.nickname")
+        video(id="{{video.vid}}", :src="video.videoPath", :poster="video.imagePath", preload="metadata", controls)
+        .nickname(v-text="video.nickname")
     #listLayout
       #list
         span.item(v-for="video in videos", @click="selectItem(video._id)", :class="{active: video.selected}")
