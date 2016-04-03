@@ -22,10 +22,21 @@ exports.init = (server) ->
 
     return
 
+# Websocketメッセージ
 exports.send = (data) ->
   if data.ok
-    ms =
-      vid: data.vid
+    type = data.type
+    if type is "video"
+      ms =
+        type: type
+        vid: data.vid
+
+    else if type is "comment"
+      ms =
+        type: type
+        nickname: data.nickname
+        content: data.content
+        ekey: data.ekey
 
     primus
       .in room
