@@ -6,6 +6,7 @@ primus = require "./lib/primus"
 getData = (query) ->
   return Promise (resolve, reject) ->
     _id = query._id
+    vid = query.vid
     type = query.type
 
     crt =
@@ -13,6 +14,9 @@ getData = (query) ->
 
     if _id
       crt._id = new ObjectID _id
+
+    if vid
+      crt.vid = vid
 
     opt =
       sort:
@@ -45,18 +49,18 @@ setData = (data) ->
   return Promise (resolve, reject) ->
     sid = data.sid
     vid = data.vid
-    thumbnail = data.thumbnail
-    message = data.message
+    tid = data.tid
+    nickname = data.message
 
     doc =
       sid: sid
       vid: vid
 
-    if thumbnail
-      doc.thumbnail = thumbnail
+    if tid
+      doc.tid = tid
 
-    if message
-      doc.message = message
+    if nickname
+      doc.nickname = nickname
 
     doc.sntdt = new Date()
 

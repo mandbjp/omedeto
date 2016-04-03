@@ -23,10 +23,11 @@ exports.init = (server) ->
     return
 
 exports.send = (data) ->
-  ms =
-    fid: data.fid
+  if data.ok
+    ms =
+      vid: data.vid
 
-  primus
-    .in room
-    .write ms
+    primus
+      .in room
+      .write ms
   return
