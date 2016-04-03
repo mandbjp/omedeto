@@ -109,7 +109,6 @@ $ ->
       connectWS: (room) ->
         primus.write room
         primus.on "data", (data) =>
-          console.log data
           if data.type is "video"
             if data.vid
               query =

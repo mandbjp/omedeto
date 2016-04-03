@@ -6,6 +6,7 @@ primus = require "./lib/primus"
 getData = (query) ->
   return Promise (resolve, reject) ->
     _id = query._id
+    type = query.type
 
     crt =
       sid: "omedeto"
