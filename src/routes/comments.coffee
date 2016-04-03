@@ -6,8 +6,6 @@ primus = require "./lib/primus"
 getData = (query) ->
   return Promise (resolve, reject) ->
     _id = query._id
-    vid = query.vid
-    type = query.type
 
     crt =
       sid: "omedeto"
@@ -15,16 +13,13 @@ getData = (query) ->
     if _id
       crt._id = new ObjectID _id
 
-    if vid
-      crt.vid = vid
-
     opt =
       sort:
         sntdt: 1
 
     flag = if type is "count" then false else true
 
-    mongo.find "omedeto", "video", crt, {}, opt
+    mongo.find "omedeto", "comment", crt, {}, opt
     .then (cursor) ->
       if flag
         cursor.toArray()
@@ -48,25 +43,24 @@ getData = (query) ->
 setData = (data) ->
   return Promise (resolve, reject) ->
     sid = data.sid
-    vid = data.vid
-    tid = data.tid
-    nickname = data.message
+    nickname = data.nickname
+    content = data.content
+    ekey = data.ekey
 
     doc =
       sid: sid
-      vid: vid
-
-    if tid
-      doc.tid = tid
 
     if nickname
       doc.nickname = nickname
+
+    if content
+      doc.content = content
 
     doc.sntdt = new Date()
 
     opt = {}
 
-    mongo.insert "omedeto", "video", doc, opt
+    mongo.insert "omedeto", "comment", doc, opt
     .then (result) ->
       resolve result
       return
@@ -76,7 +70,7 @@ setData = (data) ->
     return
 
 
-# 動画一覧取得 (GET)
+# コメント一覧取得 (GET)
 exports.index = (req, res) ->
   query = req.query
 
@@ -93,7 +87,7 @@ exports.index = (req, res) ->
     return
   return
 
-# 動画情報取得 (GET)
+# コメント情報取得 (GET)
 exports.show = (req, res) ->
   query = req.query
   query._id = req.params.id
@@ -112,7 +106,7 @@ exports.show = (req, res) ->
   return
 
 
-# 動画追加 (POST)
+# コメント追加 (POST)
 exports.create = (req, res) ->
   param = req.body
   param.sid = "omedeto"
@@ -124,8 +118,10 @@ exports.create = (req, res) ->
     if status is 200
       query =
         ok: result.ok
-        type: "video"
-        vid: param.vid
+        type: "comment"
+        nickname: param.nickname
+        content: param.content
+        ekey: param.ekey
 
       primus.send query
 

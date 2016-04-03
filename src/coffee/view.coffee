@@ -110,37 +110,40 @@ $ ->
         primus.write room
         primus.on "data", (data) =>
           console.log data
-          if data.vid
-            query =
-              sid: "omedeto"
-              vid: data.vid
+          if data.type is "video"
+            if data.vid
+              query =
+                sid: "omedeto"
+                vid: data.vid
 
-            @getVideos query
-            .then (result) =>
-              if result.length
-                result = result[0]
-                if result.tid
-                  imagePath = "/files/#{result.tid}/200x200"
-                else
-                  imagePath = "/images/noimage.png"
+              @getVideos query
+              .then (result) =>
+                if result.length
+                  result = result[0]
+                  if result.tid
+                    imagePath = "/files/#{result.tid}/200x200"
+                  else
+                    imagePath = "/images/noimage.png"
 
-                if result.vid
-                  videoPath = "/files/#{result.vid}"
+                  if result.vid
+                    videoPath = "/files/#{result.vid}"
  
-                unless result.nickname
-                  result.nickname = "不明"
+                  unless result.nickname
+                    result.nickname = "不明"
 
-                @videos.push
-                  _id: result._id
-                  nickname: result.nickname
-                  imagePath: imagePath
-                  vid: result.vid
-                  videoPath: videoPath
-                  selected: false
-              return
-            .catch (err) ->
-              console.log err
-              return
+                  @videos.push
+                    _id: result._id
+                    nickname: result.nickname
+                    imagePath: imagePath
+                    vid: result.vid
+                    videoPath: videoPath
+                    selected: false
+                return
+              .catch (err) ->
+                console.log err
+                return
+          else
+            console.log data
           return
         return
   return
