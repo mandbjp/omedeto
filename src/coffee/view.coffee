@@ -26,7 +26,7 @@ $ ->
       .then (result) =>
         for val in result
           if val.tid
-            imagePath = "/files/#{val.tid}/200x200"
+            imagePath = "/files/#{val.tid}"
           else
             imagePath = "/images/noimage.png"
 
@@ -115,7 +115,7 @@ $ ->
               .then (result) =>
                 if result
                   if result.tid
-                    imagePath = "/files/#{result.tid}/200x200"
+                    imagePath = "/files/#{result.tid}"
                   else
                     imagePath = "/images/noimage.png"
 
