@@ -53,9 +53,9 @@ $ ->
         # 件数取得
         @getVideos @query
         .then (result) =>
-          if result.length
-            @count = result[0].count
-          @query.limit += 20
+          if result
+            @count = result.count
+          @query.limit += 10
           @query.type = "list"
           @loadMore()
           return

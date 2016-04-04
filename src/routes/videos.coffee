@@ -8,6 +8,8 @@ getData = (query) ->
     _id = query._id
     vid = query.vid
     type = query.type
+    skip = query.skip
+    limit = query.limit
 
     crt =
       sid: "omedeto"
@@ -21,6 +23,16 @@ getData = (query) ->
     opt =
       sort:
         sntdt: 1
+
+    if skip
+      opt.skip = +skip
+    else
+      opt.skip = 0
+
+    if limit
+      opt.limit = +limit
+    else
+      opt.limit = 10
 
     flag = if type is "count" then false else true
 

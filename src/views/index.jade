@@ -34,4 +34,8 @@ block script
               span.glyphicon.glyphicon-zoom-in
               span="動画を見る"
 
+      .loadmore.col-xs-12(:class="{loading: loading}")
+        .load-status(v-text="query.skip + ' / ' + count")
+        img(src="/images/loading.svg", alt="Loading icon")
+        button.btn.btn-default(type="button", @click="loadMore")="Load more"
 
