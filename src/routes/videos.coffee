@@ -10,6 +10,7 @@ getData = (query) ->
     type = query.type
     skip = query.skip
     limit = query.limit
+    search = query.search
 
     crt =
       sid: "omedeto"
@@ -19,6 +20,9 @@ getData = (query) ->
 
     if vid
       crt.vid = vid
+
+    if search
+      crt.nickname = ///#{search}///
 
     opt =
       sort:

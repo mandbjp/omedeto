@@ -96,7 +96,6 @@ $ ->
       showVideo: (id) ->
         @getVideo id
         .then (result) =>
-          console.log result
           if result.vid
             result.videoPath = "/files/#{result.vid}"
 
