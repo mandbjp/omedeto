@@ -29,7 +29,7 @@ block script
             .nickname
               span.icon.glyphicon.glyphicon-user
               span.text(v-text="video.nickname")
-          a.showVideo(@click="showVideo")
+          a.showVideo(@click="showVideo(video._id)")
             .showText
               span.glyphicon.glyphicon-zoom-in
               span="動画を見る"
@@ -39,3 +39,7 @@ block script
         img(src="/images/loading.svg", alt="Loading icon")
         button.btn.btn-default(type="button", @click="loadMore")="Load more"
 
+    .detail(v-show="video._id", @click="closeVideo")
+      .video-modal
+        video(:src="video.videoPath", :poster="video.imagePath", autoplay, preload="metadata", controls)
+        
