@@ -29,7 +29,7 @@ exports.send = (data) ->
     if type is "video"
       ms =
         type: type
-        vid: data.vid
+        _id: data._id
 
     else if type is "comment"
       ms =
