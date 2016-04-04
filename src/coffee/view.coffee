@@ -26,7 +26,7 @@ $ ->
       .then (result) =>
         for val in result
           if val.tid
-            imagePath = "/files/#{val.tid}/200x200"
+            imagePath = "/files/#{val.tid}"
           else
             imagePath = "/images/noimage.png"
 
@@ -110,17 +110,12 @@ $ ->
         primus.write room
         primus.on "data", (data) =>
           if data.type is "video"
-            if data.vid
-              query =
-                sid: "omedeto"
-                vid: data.vid
-
-              @getVideos query
+            if data._id
+              @getVideo data._id
               .then (result) =>
-                if result.length
-                  result = result[0]
+                if result
                   if result.tid
-                    imagePath = "/files/#{result.tid}/200x200"
+                    imagePath = "/files/#{result.tid}"
                   else
                     imagePath = "/images/noimage.png"
 

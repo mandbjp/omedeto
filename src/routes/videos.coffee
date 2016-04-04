@@ -68,6 +68,8 @@ setData = (data) ->
 
     mongo.insert "omedeto", "video", doc, opt
     .then (result) ->
+      if result
+        result._id = doc._id
       resolve result
       return
     .catch (err) ->
@@ -125,7 +127,7 @@ exports.create = (req, res) ->
       query =
         ok: result.ok
         type: "video"
-        vid: param.vid
+        _id: result._id
 
       primus.send query
 
