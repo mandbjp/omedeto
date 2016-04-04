@@ -33,6 +33,6 @@ block script
               placeholder="お祝いメッセージを入力"
             )
           .form-group
-            button.send.btn.btn-success(@click="send")
+            button.send.btn.btn-success(@click="send", :disabled="sendBtnDissabled")
               span.glyphicon.glyphicon-envelope
               span.text="送る"

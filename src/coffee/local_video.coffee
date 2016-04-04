@@ -17,6 +17,7 @@ $ ->
       imagePath: ""
       vid: ""
       tid: ""
+      sendBtnDissabled: true
       message: ""
     created: () ->
       return
@@ -24,12 +25,11 @@ $ ->
       # 撮影するボタンクリック
       upload: (e) ->
         fileList = e.target.files
-        httpRequest = @.$http
 
         # canvasの画像データをblob形式に変換する
         # @see http://qiita.com/0829/items/a8c98c8f53b2e821ac94
         canvasToBlob = (canvas) ->
-          type = 'image/png'
+          type = 'image/jpeg'
           base64 = canvas.toDataURL type
           # Base64からバイナリへ変換
           bin = atob(base64.replace(/^.*,/, ''));
@@ -50,8 +50,8 @@ $ ->
         @videoPath = local_blob
         
         # canvasに貼り付けて静止画を取得する
-        thumbnailPromise = Q.Promise (resolve, reject) ->
-          setTimeout () ->
+        thumbnailPromise = Q.Promise (resolve, reject) =>
+          setTimeout () =>
             videoNode = document.querySelector 'video'
             videoNode.pause()
             canvasNode = document.querySelector 'canvas'
@@ -66,42 +66,38 @@ $ ->
           , 500 # ms
         
         thumbnailPromise
-        .then (canvasNode) ->
-          blob = canvasToBlob canvasNode
-          blobUrl = URL.createObjectURL blob
-          console.log blobUrl
+        .then (canvasNode) =>
+          thumbnailBlob = canvasToBlob canvasNode
           
-          # TODO: videoとthumbnailをアップロードする
-          debugger
           # Videoのアップロード
           param = new FormData()
           param.append "file", fileList[0]
-          httpRequest.post "/files", param, {}
+          @.$http.post "/files", param, {}
           .then (result) =>
             console.log "video sent"
-            debugger
             if result.status is 200
               @vid = result.data.fid
               if @vid
                 @videoPath = "/files/#{@vid}"
+                @sendBtnDissabled = false
             return
           thumbnailParam = new FormData()
-          thumbnailParam.append "file", blob
-          httpRequest.post "/files", thumbnailParam, {}
+          thumbnailParam.append "file", thumbnailBlob
+          @.$http.post "/files", thumbnailParam, {}
           .then (result) =>
             console.log "thumnail sent"
-            debugger
             if result.status is 200
               @tid = result.data.fid
               if @tid
-                @imagePath = "/files/#{@tid}"  # binding が働かない
-                el = document.querySelector "img#thumbnail-test"
-                el.src = @imagePath
+                @imagePath = "/files/#{@tid}"
             return
           return
 
       # 送るボタンクリック
       send: () ->
+        if (@vid.length is 0) or (@tid.length is 0)
+          alert "アップロードが完了するまで待ってください！"
+          return
         param =
           vid: @vid
           tid: @tid
