@@ -78,4 +78,43 @@ $ ->
             return
           return
 
+      # 動画情報取得
+      getVideo: (id) ->
+        return Promise (resolve, reject) ->
+          videos
+          .show id
+          .then (results) ->
+            resolve results
+            return
+          .catch (err) ->
+            console.log err
+            reject err
+            return
+          return
+
+      # サムネイルをクリック
+      showVideo: (id) ->
+        @getVideo id
+        .then (result) =>
+          console.log result
+          if result.vid
+            result.videoPath = "/files/#{result.vid}"
+
+          if result.tid
+            result.imagePath = "/files/#{result.tid}"
+          else
+            result.imagePath = "/images/noimage.png"
+
+          @video = result
+          return
+        .catch (err) ->
+          console.log err
+          return
+        return
+
+      # 動画を閉じる
+      closeVideo: () ->
+        @video = ""
+        $(".detail video").get(0).pause()
+        return
   return
