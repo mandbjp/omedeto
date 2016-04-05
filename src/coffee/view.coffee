@@ -17,6 +17,7 @@ $ ->
         limit: 50
       videos: []
       currentVid: ""
+      comments: []
     created: () ->
       room =
         sid: "omedeto"
@@ -137,7 +138,15 @@ $ ->
                 console.log err
                 return
           else
-            console.log data
+            height = $(window).height()
+            top = Math.random() * (height + 1 - 50)
+            data.top = top
+            @comments.push data
+
+            setTimeout () =>
+              @comments.shift()
+              return
+            , 6000
           return
         return
   return

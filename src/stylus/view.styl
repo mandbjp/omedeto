@@ -17,7 +17,7 @@
       display inline-block
 
       video
-        weight 100%
+        max-width 100%
         height 100%
 
     .nickname
@@ -49,7 +49,7 @@
 
       .item
         position relative
-        width 150px
+        width 170px
         height 100%
         display inline-block
 
@@ -88,3 +88,20 @@
   #listLayout:hover
     #list
       -webkit-transform translateY(0)
+
+  .comment
+    position absolute
+    top 0
+    right 0
+    z-index 100
+    font-size 50px
+    color #FFF
+    white-space nowrap
+    -webkit-animation flowX 6s linear 1
+
+@-webkit-keyframes flowX
+  0%
+    right -100%
+
+  100%
+    right 100%
