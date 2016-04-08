@@ -2,6 +2,6 @@
 exports.index = (req, res) ->
   accept = req.headers.accept
   if accept.match "html"
-    res.render "local_video",
+    res.render "test-upload",
       pretty: true
   return
