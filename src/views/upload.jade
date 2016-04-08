@@ -6,6 +6,8 @@ block style
 
 block content
 
+block footer
+ 
 block script
   script(src="/js/upload.js")
   script(type="text/v-template")#template
@@ -16,11 +18,14 @@ block script
         .form-horizontal
           .form-group
             .video
-              video(:src="videoPath", loop, autoplay ,preload="true", controls)
+              video(:src="videoPath", loop, autoplay, preload="true", controls)
             button.shooting.btn.btn-success.fileinput-button
-              input#upload(type="file", name="file", @change="upload")
+              input#upload(type="file", name="file", accept="video/*", @change="upload")
               span.glyphicon.glyphicon-camera
               span.text="撮影する"
+            .create-thumbnail
+              canvas
+              img#thumbnail-test(:src="imagePath")
           .form-group
             textarea.input-sm(
               v-model="message"
@@ -28,6 +33,6 @@ block script
               placeholder="お祝いメッセージを入力"
             )
           .form-group
-            button.send.btn.btn-success(@click="send")
+            button.send.btn.btn-success(@click="send", :disabled="sendBtnDissabled")
               span.glyphicon.glyphicon-envelope
               span.text="送る"
