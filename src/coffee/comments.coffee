@@ -4,6 +4,7 @@ $ ->
   Q = require "q"
   Promise = Q.Promise
   comments = new Ajax "comments"
+  db = require "localforage"
 
   # 検証用コメント画面のVueModel
   vm = new Vue
@@ -14,6 +15,13 @@ $ ->
       nickname: ""
       content: ""
     created: () ->
+      db.getItem "nickname"
+      .then (val) =>
+        @nickname = val
+        return
+      .catch (err) ->
+        console.log err
+        return
       return
     methods:
       # 送るボタンクリック
@@ -25,7 +33,7 @@ $ ->
         comments
         .create param
         .then (result) =>
-          console.log result
+          @content = ""
           return
         .catch (err) ->
           console.log err

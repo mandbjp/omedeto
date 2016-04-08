@@ -75,6 +75,12 @@ setData = (data) ->
 exports.index = (req, res) ->
   query = req.query
 
+  accept = req.headers.accept
+  if accept.match "html"
+    res.render "comments",
+      pretty: true
+  return
+
   # Validation 追加予定
 
   getData query

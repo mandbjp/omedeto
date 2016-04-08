@@ -1,0 +1,27 @@
+extends layout
+
+block style
+  link(rel="stylesheet", href="/css/menu.css")
+
+block top
+  #header
+    #title="Omedeto"
+ 
+block content
+
+block script
+  script(src="/js/menu.js")
+  script(type="text/v-template")#template
+    .nickname
+      .title="ユーザ名を入れてください"
+      input.form-control(type="text", v-model="nickname" ,placeholder="動画、コメント表示時に使用します。無記名でもOK")
+    .menuButton
+      button.btn.btn-default(type="button", @click="selectMenu('upload')")
+        span.text="動画アップロード"
+    .menuButton
+      button.btn.btn-default(type="button", @click="selectMenu('comments')")
+        span.text="コメント"
+
+    .notice
+      span.text="アップロードした動画をその場で共有！自動でスライドショーが作れます\n\rコメントからスライドショーにリアルタイムでコメントすることもできちゃいますw"
+        
