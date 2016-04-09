@@ -20,6 +20,7 @@ $ ->
         skip: 0
         limit: ""
       count: ""
+      sortMode: false
     created: () ->
       @query.sid = "omedeto"
       @reloadList()
@@ -37,6 +38,7 @@ $ ->
               val.imagePath = "/images/noimage.png"
             unless val.nickname
               val.nickname = "不明"
+            val.checked = false
             @videos.push val
           return
         .catch (err) ->
@@ -47,6 +49,7 @@ $ ->
       # 一覧をリロード
       reloadList: () ->
         @videos = []
+        @sortMode = false
         @query.skip = 0
         @query.limit = ""
         @query.type = "count"
@@ -115,5 +118,69 @@ $ ->
       closeVideo: () ->
         @video = ""
         $(".detail video").get(0).pause()
+        return
+
+      # 一覧選択
+      selectItem: (id) ->
+        if @sortMode
+          for val in @videos
+            if val._id is id
+              if val.checked
+                val.checked = false
+              else
+                val.checked = true
+        return
+
+      # 選択動画を一つ前に移動
+      movePrev: () ->
+        for val, index in @videos
+          if val.checked
+            if index > 0
+              @videos.splice index - 1 , 2, @videos[index], @videos[index - 1]
+            else
+              return
+        return
+
+      # 選択動画を一つ後ろに移動
+      moveNext: () ->
+        for index in [@videos.length - 1 .. 0]
+          if @videos[index].checked
+            if index < @videos.length - 1
+              @videos.splice index, 2, @videos[index + 1], @videos[index]
+            else
+              return
+        return
+
+      # 取消ボタンクリック
+      sortCancel: () ->
+        @sortMode = false
+        @reloadList()
+        return
+
+      # 保存ボタンクリック
+      sortSave: () ->
+        success = 0
+        @videos.reduce (promise, data, index) =>
+          return promise.then () =>
+            id = data._id
+            param =
+              order: index + 1
+            videos
+            .update id, param
+            .then (result) =>
+              if result.n
+                success++
+              return
+            .catch (err) ->
+              console.log err
+              return
+            return
+        , Promise.resolve()
+          .then () =>
+            alert "動画の表示順を変更しました。"
+            @reloadList()
+          .catch (err) ->
+            console.log err
+            return
         return
   return

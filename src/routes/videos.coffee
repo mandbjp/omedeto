@@ -26,7 +26,7 @@ getData = (query) ->
 
     opt =
       sort:
-        sntdt: 1
+        order: 1
 
     if skip
       opt.skip = +skip
@@ -61,12 +61,13 @@ getData = (query) ->
       return
     return
 
-setData = (data) ->
+insertData = (data) ->
   return Promise (resolve, reject) ->
     sid = data.sid
     vid = data.vid
     tid = data.tid
     nickname = data.message
+    order = data.order
 
     doc =
       sid: sid
@@ -78,11 +79,61 @@ setData = (data) ->
     if nickname
       doc.nickname = nickname
 
+    if order
+      doc.order = order
+    else
+      doc.order = 9999
+
     doc.sntdt = new Date()
+    doc.uptdt = new Date()
 
     opt = {}
 
     mongo.insert "omedeto", "video", doc, opt
+    .then (result) ->
+      if result
+        result._id = doc._id
+      resolve result
+      return
+    .catch (err) ->
+      reject err
+      return
+    return
+
+updateData = (data) ->
+  return Promise (resolve, reject) ->
+    _id = data._id
+    sid = data.sid
+    vid = data.vid
+    tid = data.tid
+    nickname = data.message
+    order = data.order
+
+    crt =
+      sid: sid
+      _id: new ObjectID _id
+
+    doc =
+      $set: {}
+
+    if vid
+      doc.$set.vid = vid
+
+    if tid
+      doc.$set.tid = tid
+
+    if nickname
+      doc.$set.nickname = nickname
+
+    if order
+      doc.$set.order = order
+    else
+      doc.$set.order = 9999
+
+    doc.$set.uptdt = new Date()
+
+    opt = {}
+    mongo.update "omedeto", "video", crt, doc, opt
     .then (result) ->
       if result
         result._id = doc._id
@@ -136,7 +187,7 @@ exports.create = (req, res) ->
   param.sid = "omedeto"
 
   # Validation 追加予定
-  setData param
+  insertData param
   .then (result) ->
     status = if result.ok then 200 else 400
     if status is 200
@@ -147,6 +198,27 @@ exports.create = (req, res) ->
 
       primus.send query
 
+    res.status status
+      .send result
+    return
+  .catch (err) ->
+    res.status err.code
+      .send err.msg
+    return
+
+  return
+
+
+# 動画編集 (PUT)
+exports.update = (req, res) ->
+  param = req.body
+  param._id = req.params.id
+  param.sid = "omedeto"
+
+  # Validation 追加予定
+  updateData param
+  .then (result) ->
+    status = if result.ok then 200 else 400
     res.status status
       .send result
     return
