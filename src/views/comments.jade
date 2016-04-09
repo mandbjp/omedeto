@@ -1,20 +1,18 @@
 extends layout
 
 block style
-  link(rel="stylesheet", href="/css/test-comment.css")
+  link(rel="stylesheet", href="/css/comments.css")
 
 block content
 
 block script
-  script(src="/js/test-comment.js")
+  script(src="/js/comments.js")
   script(type="text/v-template")#template
     #header
       #title="Omedeto App"
     #main
       #layout
         .form-horizontal
-          .form-group
-            input.form-control(v-model="nickname", placeholder="ニックネームを入力")
           .form-group
             textarea.input-lg(
               v-model="content"
