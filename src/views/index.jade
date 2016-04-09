@@ -21,7 +21,10 @@ block script
     .menuButton
       button.btn.btn-default(type="button", @click="selectMenu('comments')")
         span.text="コメント"
-
+    .menuButton
+      button.btn.btn-default(type="button", @click="selectMenu('list')")
+        span.text="動画一覧"
+ 
     .notice
       span.text="アップロードした動画をその場で共有！自動でスライドショーが作れます\n\rコメントからスライドショーにリアルタイムでコメントすることもできちゃいますw"
         
