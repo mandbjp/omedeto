@@ -6,8 +6,6 @@ block style
 
 block content
 
-block footer
- 
 block script
   script(src="/js/upload.js")
   script(type="text/v-template")#template
@@ -16,23 +14,41 @@ block script
     #main
       #layout
         .form-horizontal
-          .form-group
-            .video
-              video(:src="videoPath", loop, autoplay, preload="true", controls)
+          #intoro-message.form-group(v-show="viewShowFileSelect")
+            .step-container.step-margin-bottom
+              .step-title="アップロード"
+              .step-message="10秒お祝いメッセージ動画を撮影してください！"
             button.shooting.btn.btn-success.fileinput-button
               input#upload(type="file", name="file", accept="video/*", @change="upload")
               span.glyphicon.glyphicon-camera
               span.text="撮影する"
-            .create-thumbnail
-              canvas
-              img#thumbnail-test(:src="imagePath")
-          .form-group
-            textarea.input-sm(
-              v-model="message"
-              row="5"
-              placeholder="お祝いメッセージを入力"
-            )
-          .form-group
-            button.send.btn.btn-success(@click="send", :disabled="sendBtnDissabled")
-              span.glyphicon.glyphicon-envelope
-              span.text="送る"
+
+          #check-video-message.form-group(v-show="viewShowVideoPreview")
+            .step-container
+              .step-title="動画を確認"
+              .step-message="登録する動画を確認してください"
+            .form-group
+              .video
+                video(:src="videoPath", loop, autoplay, preload="true", controls, @play="video_play")
+            #while-uploading-video(v-show="viewSendBtnDissabled")
+              .step-container
+                .step-message="動画を送信中です…"
+              .form-group
+                img.loading(src="/images/loading.svg", alt="Loading icon")
+            #post-upload-video(v-show="!viewSendBtnDissabled")
+              .step-container
+                .step-message="確認した動画でよければ送るボタンで送信！"
+              .form-group
+                button.send.btn.btn-success(@click="send", :disabled="sendBtnDissabled")
+                  span.glyphicon.glyphicon-envelope
+                  span.text="送る"
+            #reload-page
+              .step-container
+                .step-message="やり直す場合はこちら"
+              .form-group
+                button.btn.btn-defaultlink(@click="confirmAndReloadPage")
+                  span.text="動画を選びなおす"
+
+          .create-thumbnail
+            canvas
+            img#thumbnail-test(:src="imagePath")
