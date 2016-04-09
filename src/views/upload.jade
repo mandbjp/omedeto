@@ -15,33 +15,40 @@ block script
       #layout
         .form-horizontal
           #intoro-message.form-group(v-show="viewShowFileSelect")
-            h4.text="ステップ1. 10秒お祝いメッセージ動画を撮影してください！"
+            .step-container.step-margin-bottom
+              .step-title="アップロード"
+              .step-message="10秒お祝いメッセージ動画を撮影してください！"
             button.shooting.btn.btn-success.fileinput-button
               input#upload(type="file", name="file", accept="video/*", @change="upload")
               span.glyphicon.glyphicon-camera
               span.text="撮影する"
 
           #check-video-message.form-group(v-show="viewShowVideoPreview")
-            h4.text="撮影された動画を確認できます。"
+            .step-container
+              .step-title="動画を確認"
+              .step-message="登録する動画を確認してください"
             .form-group
               .video
                 video(:src="videoPath", loop, autoplay, preload="true", controls, @play="video_play")
-          #ready-to-submit-message.form-group(v-show="viewShowVideoPreview")
-            h4.text="ステップ2. 確認した動画でよければ送るボタンで送信！"
-            // TODO: videoアップロードが終わるまで、確認中メッセージ + loaderを表示
-            .form-group
-              button.send.btn.btn-success(@click="send", :disabled="sendBtnDissabled")
-                span.glyphicon.glyphicon-envelope
-                span.text="送る"
-              button.btn.btn-defaultlink(@click="confirmAndReloadPage")
-                span.text="動画を選びなおす"
+            #while-uploading-video(v-show="viewSendBtnDissabled")
+              .step-container
+                .step-message="動画を送信中です…"
+              .form-group
+                img.loading(src="/images/loading.svg", alt="Loading icon")
+            #post-upload-video(v-show="!viewSendBtnDissabled")
+              .step-container
+                .step-message="確認した動画でよければ送るボタンで送信！"
+              .form-group
+                button.send.btn.btn-success(@click="send", :disabled="sendBtnDissabled")
+                  span.glyphicon.glyphicon-envelope
+                  span.text="送る"
+            #reload-page
+              .step-container
+                .step-message="やり直す場合はこちら"
+              .form-group
+                button.btn.btn-defaultlink(@click="confirmAndReloadPage")
+                  span.text="動画を選びなおす"
 
           .create-thumbnail
             canvas
             img#thumbnail-test(:src="imagePath")
-            .form-group
-              textarea.input-sm(
-                v-model="message"
-                row="5"
-                placeholder="お祝いメッセージを入力"
-              )

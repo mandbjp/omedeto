@@ -50,7 +50,7 @@ $ ->
           if result.status is 200
             @vid = result.data.fid
             if @vid
-              @videoPath = "/files/#{@vid}"  # アップロードした動画をロードする必要はあるか？
+              # @videoPath = "/files/#{@vid}"  # アップロードした動画をロードする必要はあるか？
               @viewSendBtnDissabled = false
           return
         .catch (err) ->
@@ -84,8 +84,8 @@ $ ->
         
         if @viewThumbnailUploadTriggered
           return
-        # canvasに貼り付けて静止画を取得する
-        thumbnailPromise = Q.Promise (resolve, reject) =>
+        Q.Promise (resolve, reject) =>
+          # canvasに貼り付けて静止画を取得する
           setTimeout () =>
             videoNode = document.querySelector 'video'
             canvasNode = document.querySelector 'canvas'
@@ -97,10 +97,10 @@ $ ->
             canvasNode.height = vh
             canvasContext.drawImage videoNode, 0, 0, vw, vh
             resolve canvasNode
-          , 500 # ms
-        
-        thumbnailPromise
+          , 1000 # ms
+
         .then (canvasNode) =>
+          # サムネイルをアップロードする
           thumbnailBlob = @canvasToBlob canvasNode
           @viewThumbnailUploadTriggered = true
 
@@ -118,13 +118,14 @@ $ ->
             console.log "error on thumbnail upload", err
             return
           return
+
         .catch (err) ->
           console.log "error on thumbnailPromise upload", err
           return
 
       # 送るボタンクリック
       send: () ->
-        if (@vid.length is 0) or (@tid.length is 0)
+        if @vid.length is 0
           alert "アップロードが完了するまで待ってください！"
           return
         param =
