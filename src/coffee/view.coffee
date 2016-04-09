@@ -45,9 +45,13 @@ $ ->
             videoPath: videoPath
             selected: false
             positionX: ""
-          
+        
+        # 初期表示時、先頭の動画選択
         if @videos.length
-          @selectItem @videos[0]._id
+          setTimeout () =>
+            @selectItem @videos[0]._id
+            return
+          , 1000
         return
       .catch (err) ->
         console.log err
@@ -81,6 +85,25 @@ $ ->
             reject()
             return
           return
+
+      # Metadataローディング後、再生
+      loadedmetadata: (e) ->
+        vid = e.target.id
+        if vid
+          $("##{vid}").get(0).play()
+        return
+
+      # 動画再生完了イベント
+      ended: (e) ->
+        endedID = e.target.id
+        for val, index in @videos
+          if val.vid is endedID
+            next = index + 1
+            if next >= @videos.length
+              next = 0
+            # 次の動画を選択
+            @selectItem @videos[next]._id
+        return
       
       # List選択
       selectItem: (id) ->
@@ -97,10 +120,8 @@ $ ->
             $("#view").animate
               scrollLeft: (width * index)
 
-            # 選択動画再生
-            $("##{val.vid}").get(0).play()
-            #$("##{val.vid}").get(0).addEventListener "ended", () ->
-            #  return
+            # 選択動画ローディング
+            $("##{val.vid}").get(0).load()
             @currentVid = val.vid
           else
             val.selected = false
