@@ -14,22 +14,38 @@ block script
   script(type="text/v-template")#template
     .navigator="動画一覧"
     .tool
-      .search.col-xs-12.col-sm-12.col-md-6.col-md-offset-6.col-lg-4.col-lg-offset-8
+      .search.col-xs-12.col-sm-12.col-md-6.col-lg-4
         .input-group.input-group-sm
           input.form-control(type="text", v-model="query.search", placeholder="ニックネームで検索", @keyup.enter="reloadList")
           span.input-group-btn
             button.btn.btn-primary(type="button", @click="reloadList")
               span.glyphicon.glyphicon-search
+      .orderby.col-xs-12.col-sm-12.col-md-6.col-lg-4
+        button.btn.btn-default(type="button", @click="sortMode = true", v-show="!sortMode")
+          span.icon.glyphicon.glyphicon-sort
+          span.text="表示順変更"
+        .controller(v-show="sortMode")
+          button.btn.btn-default(type="button", @click="movePrev")
+            span.glyphicon.glyphicon-chevron-left
+          button.btn.btn-default(type="button", @click="moveNext")
+            span.glyphicon.glyphicon-chevron-right
+          button.btn.btn-default(type="button", @click="sortCancel")
+            span.icon.glyphicon.glyphicon-repeat
+            span.text="取消"
+          button.btn.btn-primary(type="button", @click="sortSave")
+            span.icon.glyphicon.glyphicon-floppy-disk
+            span.text="保存"
     .list
       .item.col-xs-6.col-sm-4.col-md-3(v-for="video in videos")
-        .thumbnail
+        .thumbnail(@click="selectItem(video._id)")
+          input.checkbox(v-show="sortMode", type="checkbox", v-model="video.checked")
           .imageLayout
             img.img-thumbnail(:src="video.imagePath")
           .caption
             .nickname
               span.icon.glyphicon.glyphicon-user
               span.text(v-text="video.nickname")
-          a.showVideo(@click="showVideo(video._id)")
+          a.showVideo(v-show="!sortMode", @click="showVideo(video._id)")
             .showText
               span.glyphicon.glyphicon-zoom-in
               span="動画を見る"
