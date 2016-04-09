@@ -5,41 +5,23 @@ block style
 
 block top
   #header
-    #title="Omedeto Web"
+    #title="Omedeto"
  
 block content
 
 block script
   script(src="/js/index.js")
   script(type="text/v-template")#template
-    .navigator="動画一覧"
-    .tool
-      .search.col-xs-12.col-sm-12.col-md-6.col-md-offset-6.col-lg-4.col-lg-offset-8
-        .input-group.input-group-sm
-          input.form-control(type="text", v-model="query.search", placeholder="ニックネームで検索", @keyup.enter="reloadList")
-          span.input-group-btn
-            button.btn.btn-primary(type="button", @click="reloadList")
-              span.glyphicon.glyphicon-search
-    .list
-      .item.col-xs-6.col-sm-4.col-md-3(v-for="video in videos")
-        .thumbnail
-          .imageLayout
-            img.img-thumbnail(:src="video.imagePath")
-          .caption
-            .nickname
-              span.icon.glyphicon.glyphicon-user
-              span.text(v-text="video.nickname")
-          a.showVideo(@click="showVideo(video._id)")
-            .showText
-              span.glyphicon.glyphicon-zoom-in
-              span="動画を見る"
+    .nickname
+      .title="ユーザ名を入れてください"
+      input.form-control(type="text", v-model="nickname" ,placeholder="動画、コメント表示時に使用します。無記名でもOK")
+    .menuButton
+      button.btn.btn-default(type="button", @click="selectMenu('upload')")
+        span.text="動画アップロード"
+    .menuButton
+      button.btn.btn-default(type="button", @click="selectMenu('comments')")
+        span.text="コメント"
 
-      .loadmore.col-xs-12(:class="{loading: loading}")
-        .load-status(v-text="query.skip + ' / ' + count")
-        img(src="/images/loading.svg", alt="Loading icon")
-        button.btn.btn-default(type="button", @click="loadMore")="Load more"
-
-    .detail(v-show="video._id", @click="closeVideo")
-      .video-modal
-        video(:src="video.videoPath", :poster="video.imagePath", autoplay, preload="metadata", controls)
+    .notice
+      span.text="アップロードした動画をその場で共有！自動でスライドショーが作れます\n\rコメントからスライドショーにリアルタイムでコメントすることもできちゃいますw"
         
