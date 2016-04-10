@@ -10,7 +10,7 @@ exports.config =
   auth:
     admin:
       user: "admin"
-      password: "sb#123"
+      password: "adminpassword"
     general:
       user: "user"
       password: "password"
