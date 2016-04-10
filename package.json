@@ -44,6 +44,7 @@
     "stylus": "0.52.4",
     "vinyl-source-stream": "1.1.0",
     "vue": "1.0.3",
-    "vue-resource": "0.7.0"
+    "vue-resource": "0.7.0",
+    "fluent-ffmpeg": "2.0.1"
   }
 }
