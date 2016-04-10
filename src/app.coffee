@@ -9,6 +9,7 @@ moment = require "moment"
 multipart = require "connect-multiparty"
 helmet = require "helmet"
 primus = require "./routes/lib/primus"
+basicAuth = require "basic-auth-connect"
 
 app = express()
 server = http.createServer app
@@ -37,6 +38,20 @@ primus.init server
 app.use multipart
   uploadDir: __dirname + "/upload"
   limit: "1000mb"
+
+# Basic認証
+app.use basicAuth (user, pass) ->
+  admin = config.auth.admin
+  general = config.auth.general
+
+  # 管理権限
+  if user is admin.user and pass is admin.password
+    return true
+  # 一般権限
+  else if user is general.user and pass is general.password
+    return true
+  else
+    return false
 
 # Web-APIの各ターゲットに処理をマップする
 files = []
