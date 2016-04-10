@@ -4,6 +4,7 @@ $ ->
   Ajax = require "./lib/ajax"
   Q = require "q"
   Promise = Q.Promise
+  db = require "localforage"
   files = new Ajax "files"
   videos = new Ajax "videos"
 
@@ -17,6 +18,7 @@ $ ->
       imagePath: ""
       vid: ""
       tid: ""
+      nickname: ""
       selectedFile: null
       message: ""
       viewSendBtnDissabled: true
@@ -24,7 +26,12 @@ $ ->
       viewShowFileSelect: true
       viewShowVideoPreview: false
     created: () ->
+      db.getItem "nickname"
+      .then (val) =>
+        @nickname = val
+        return
       return
+
     methods:
       # 撮影するボタンクリック
       upload: (e) ->
@@ -131,7 +138,7 @@ $ ->
         param =
           vid: @vid
           tid: @tid
-          message: @message
+          nickname: @nickname
 
         videos
         .create param
