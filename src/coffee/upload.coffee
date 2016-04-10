@@ -55,7 +55,8 @@ $ ->
         .then (result) =>
           console.log "video sent"
           if result.status is 200
-            @vid = result.data.fid
+            @vid = result.data.vid
+            @tid = result.data.tid
             if @vid
               # @videoPath = "/files/#{@vid}"  # アップロードした動画をロードする必要はあるか？
               @viewSendBtnDissabled = false
@@ -71,64 +72,9 @@ $ ->
         
         return
       
-      # canvasの画像データをblob形式に変換する
-      # @see http://qiita.com/0829/items/a8c98c8f53b2e821ac94
-      canvasToBlob: (canvas) ->
-        type = 'image/jpeg'
-        base64 = canvas.toDataURL type
-        # Base64からバイナリへ変換
-        bin = atob(base64.replace(/^.*,/, ''));
-        buffer = new Uint8Array(bin.length);
-        for b, i in bin
-          buffer[i] = bin.charCodeAt i
-        # Blobを作成
-        blob = new Blob [buffer.buffer], {type: type};
-        return blob
-
       video_play: () ->
         # 動画が再生された時
-        console.log "play"
-        
-        if @viewThumbnailUploadTriggered
-          return
-        Q.Promise (resolve, reject) =>
-          # canvasに貼り付けて静止画を取得する
-          setTimeout () =>
-            videoNode = document.querySelector 'video'
-            canvasNode = document.querySelector 'canvas'
-            canvasContext = canvasNode.getContext '2d'
-            canvasNode.style = "height:" + videoNode.videoHeight + "px; width: " + videoNode.videoWidth + "px;";
-            vw = videoNode.videoWidth / 2
-            vh = videoNode.videoHeight / 2
-            canvasNode.width = vw
-            canvasNode.height = vh
-            canvasContext.drawImage videoNode, 0, 0, vw, vh
-            resolve canvasNode
-          , 1000 # ms
-
-        .then (canvasNode) =>
-          # サムネイルをアップロードする
-          thumbnailBlob = @canvasToBlob canvasNode
-          @viewThumbnailUploadTriggered = true
-
-          thumbnailParam = new FormData()
-          thumbnailParam.append "file", thumbnailBlob
-          @.$http.post "/files", thumbnailParam, {}
-          .then (result) =>
-            console.log "thumnail sent"
-            if result.status is 200
-              @tid = result.data.fid
-              if @tid
-                @imagePath = "/files/#{@tid}"
-            return
-          .catch (err) ->
-            console.log "error on thumbnail upload", err
-            return
-          return
-
-        .catch (err) ->
-          console.log "error on thumbnailPromise upload", err
-          return
+        return
 
       # 送るボタンクリック
       send: () ->
