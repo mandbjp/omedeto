@@ -7,3 +7,10 @@ exports.config =
     options:
       poolSize: 10
       auto_reconnect: true
+  auth:
+    admin:
+      user: "admin"
+      password: "adminpassword"
+    general:
+      user: "user"
+      password: "password"

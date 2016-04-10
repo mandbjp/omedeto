@@ -20,21 +20,22 @@ block script
           span.input-group-btn
             button.btn.btn-primary(type="button", @click="reloadList")
               span.glyphicon.glyphicon-search
-      .orderby.col-xs-12.col-sm-12.col-md-6.col-lg-4
-        button.btn.btn-default(type="button", @click="sortMode = true", v-show="!sortMode")
-          span.icon.glyphicon.glyphicon-sort
-          span.text="表示順変更"
-        .controller(v-show="sortMode")
-          button.btn.btn-default(type="button", @click="movePrev")
-            span.glyphicon.glyphicon-chevron-left
-          button.btn.btn-default(type="button", @click="moveNext")
-            span.glyphicon.glyphicon-chevron-right
-          button.btn.btn-default(type="button", @click="sortCancel")
-            span.icon.glyphicon.glyphicon-repeat
-            span.text="取消"
-          button.btn.btn-primary(type="button", @click="sortSave")
-            span.icon.glyphicon.glyphicon-floppy-disk
-            span.text="保存"
+      - if(admin)
+        .orderby.col-xs-12.col-sm-12.col-md-6.col-lg-4
+          button.btn.btn-default(type="button", @click="sortMode = true", v-show="!sortMode")
+            span.icon.glyphicon.glyphicon-sort
+            span.text="表示順変更"
+          .controller(v-show="sortMode")
+            button.btn.btn-default(type="button", @click="movePrev")
+              span.glyphicon.glyphicon-chevron-left
+            button.btn.btn-default(type="button", @click="moveNext")
+              span.glyphicon.glyphicon-chevron-right
+            button.btn.btn-default(type="button", @click="sortCancel")
+              span.icon.glyphicon.glyphicon-repeat
+              span.text="取消"
+            button.btn.btn-primary(type="button", @click="sortSave")
+              span.icon.glyphicon.glyphicon-floppy-disk
+              span.text="保存"
     .list
       .item.col-xs-6.col-sm-4.col-md-3(v-for="video in videos")
         .thumbnail(@click="selectItem(video._id)")
