@@ -8,11 +8,12 @@
 (mongoWrpperがES6で書いてあるため、babel5のインストールが要る)
 
 ```bash
-$ nvm install 0.10.xx
-$ nvm use 0.10.xx
+$ nvm install 0.12.xx
+$ nvm use 0.12.xx
 $ npm install -g gulp
 $ npm install -g bower
 $ npm install -g babel@5
+$ npm install -g pm2
 ```
 
 　
@@ -90,3 +91,9 @@ $ gulp
 + stylusコンパイル
 + node起動
 + ファイル変更監視
+
+本版環境用に起動します。
+
+```bash
+$ npm start
+```
