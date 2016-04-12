@@ -14,17 +14,26 @@ block script
   script(type="text/v-template")#template
     .nickname
       .title="ユーザ名を入れてください"
-      input.form-control(type="text", v-model="nickname" ,placeholder="動画、コメント表示時に使用します。無記名でもOK")
+      input.form-control(type="text", v-model="nickname", @focusout="setNickname", placeholder="動画、コメント表示時に使用します。")
     .menuButton
       button.btn.btn-default(type="button", @click="selectMenu('upload')")
+        span.icon.glyphicon.glyphicon-facetime-video
         span.text="動画アップロード"
     .menuButton
       button.btn.btn-default(type="button", @click="selectMenu('comments')")
+        span.icon.glyphicon.glyphicon-comment
         span.text="コメント"
     .menuButton
       button.btn.btn-default(type="button", @click="selectMenu('list')")
+        span.icon.glyphicon.glyphicon-film
         span.text="動画一覧"
  
     .notice
-      span.text="アップロードした動画をその場で共有！自動でスライドショーが作れます\n\rコメントからスライドショーにリアルタイムでコメントすることもできちゃいますw"
+      span.text
+        |アップロードした動画をその場で共有！
+        br
+        |自動でスライドショーが作れます
+        br
+        br
+        |コメントからスライドショーにリアルタイムでコメントすることもできちゃいますw
         

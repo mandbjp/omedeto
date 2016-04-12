@@ -28,12 +28,41 @@ concept-color = #BCE55C
   text-align center
 
   .nickname
-    margin 40px
+    position relative
+    width 100%
+    padding 40px
+
+    .title
+      margin 5px
+
+    input.form-control
+      display initial
+      max-width 300px
 
   .menuButton
-    margin 20px
+    position relative
+    width 100%
+    padding 15px
+
+    button
+      position relative
+      width 250px
+
+      .icon
+        position absolute
+        width 20px
+        line-height 2
+        text-align left
+
+      .text
+        position relative
+        width 100%
+        padding-left 20px
 
   .notice
     margin 20px
-    border solid 1px #eee
-    padding 10px
+    padding 20px
+    max-width 400px
+    display inline-block
+    background-color concept-color + 80%
+    border-radius 10px
