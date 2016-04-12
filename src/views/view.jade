@@ -19,5 +19,6 @@ block script
           .thumbnail
             img.img-thumbnail(:src="video.imagePath")
             .explain
+              span.index(v-text="'# ' + ($index + 1)")
               span.nickname(v-text="video.nickname")
     .comment(v-for="comment in comments", v-text="comment.content", v-bind:style="{top: comment.top + 'px'}")

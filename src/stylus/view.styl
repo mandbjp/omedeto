@@ -52,6 +52,7 @@
         width 170px
         height 100%
         display inline-block
+        cursor pointer
 
         .thumbnail
           width 100%
@@ -71,16 +72,24 @@
             width 100%
             height 20%
             bottom 0
+            padding 10px
+            background-color #000
+            opacity .8
+            color #FFDF24
+            font-size 13px
+
+            span.index
+              position absolute
 
             span.nickname
               position relaitve
               float left
               width 100%
-              height 100%
-              background-color #000
-              color #fff
-              font-size 11px
-              opacity .8
+              overflow hidden
+              white-space nowrap
+              text-overflow ellipsis
+              text-align right
+              padding-left 50px
 
       .item:hover, .item.active
         border solid 2px #0054FF
