@@ -43,10 +43,16 @@ block script
           .imageLayout
             img.img-thumbnail(:src="video.imagePath")
           .caption
-            .index(v-text="'# ' + ($index + 1)")
-            .nickname
-              span.icon.glyphicon.glyphicon-user
-              span.text(v-text="video.nickname")
+            .contents
+              .index(v-text="'# ' + ($index + 1)")
+              - if(admin)
+                .view
+                  span.icon.glyphicon.glyphicon-eye-open
+                  span.text(v-text="video.view")
+            .contents
+              .nickname
+                span.icon.glyphicon.glyphicon-user
+                span.text(v-text="video.nickname")
           a.showVideo(v-show="!sortMode", @click="showVideo(video._id)")
             .showText
               span.glyphicon.glyphicon-zoom-in

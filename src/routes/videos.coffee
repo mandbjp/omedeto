@@ -83,7 +83,7 @@ insertData = (data) ->
       doc.order = order
     else
       doc.order = 9999
-
+    doc.view = 0
     doc.sntdt = new Date()
     doc.uptdt = new Date()
 
@@ -108,6 +108,7 @@ updateData = (data) ->
     tid = data.tid
     nickname = data.nickname
     order = data.order
+    view = data.view
 
     crt =
       sid: sid
@@ -127,11 +128,11 @@ updateData = (data) ->
 
     if order
       doc.$set.order = order
-    else
-      doc.$set.order = 9999
+
+    if view
+      doc.$set.view = view
 
     doc.$set.uptdt = new Date()
-
     opt = {}
     mongo.update "omedeto", "video", crt, doc, opt
     .then (result) ->
