@@ -94,22 +94,38 @@ concept-color = #BCE55C
         background-color #FFF
         bottom 0
 
-        .nickname
+        .contents
           position relative
           width 100%
-          min-height 20px
+          float left
 
-          .icon
-            position absolute
-            width 20px
-
-          .text
-            width 100%
+          .index, .view
+            width 50%
             float left
-            padding-left 20px
-            overflow hidden
-            white-space nowrap
-            text-overflow ellipsis
+
+          .view
+            text-align right
+
+            .icon
+              margin-right 5px
+
+          .nickname
+            position relative
+            width 100%
+            min-height 20px
+            float left
+
+            .icon
+              position absolute
+              width 20px
+
+            .text
+              width 100%
+              float left
+              padding-left 20px
+              overflow hidden
+              white-space nowrap
+              text-overflow ellipsis
 
       .showVideo
         display none

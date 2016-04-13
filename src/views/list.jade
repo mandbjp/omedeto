@@ -14,14 +14,14 @@ block script
   script(type="text/v-template")#template
     .navigator="動画一覧"
     .tool
-      .search.col-xs-12.col-sm-12.col-md-6.col-lg-4
+      .search.col-xs-12.col-sm-12.col-md-6.col-lg-6
         .input-group.input-group-sm
           input.form-control(type="text", v-model="query.search", placeholder="ニックネームで検索", @keyup.enter="reloadList")
           span.input-group-btn
             button.btn.btn-primary(type="button", @click="reloadList")
               span.glyphicon.glyphicon-search
       - if(admin)
-        .orderby.col-xs-12.col-sm-12.col-md-6.col-lg-4
+        .orderby.col-xs-12.col-sm-12.col-md-6.col-lg-6
           button.btn.btn-default(type="button", @click="sortMode = true", v-show="!sortMode")
             span.icon.glyphicon.glyphicon-sort
             span.text="表示順変更"
@@ -43,10 +43,16 @@ block script
           .imageLayout
             img.img-thumbnail(:src="video.imagePath")
           .caption
-            .index(v-text="'# ' + ($index + 1)")
-            .nickname
-              span.icon.glyphicon.glyphicon-user
-              span.text(v-text="video.nickname")
+            .contents
+              .index(v-text="'# ' + ($index + 1)")
+              - if(admin)
+                .view
+                  span.icon.glyphicon.glyphicon-eye-open
+                  span.text(v-text="video.view")
+            .contents
+              .nickname
+                span.icon.glyphicon.glyphicon-user
+                span.text(v-text="video.nickname")
           a.showVideo(v-show="!sortMode", @click="showVideo(video._id)")
             .showText
               span.glyphicon.glyphicon-zoom-in

@@ -95,6 +95,20 @@ $ ->
             return
           return
 
+      # Viewをカウント
+      countView: (data) ->
+        id = data._id
+
+        unless data.view
+          data.view = 0
+        data.view++
+        query =
+          view: data.view
+
+        videos.update id, query
+
+        return
+
       # サムネイルをクリック
       showVideo: (id) ->
         @getVideo id
@@ -108,6 +122,7 @@ $ ->
             result.imagePath = "/images/noimage.png"
 
           @video = result
+          @countView result
           return
         .catch (err) ->
           console.log err
