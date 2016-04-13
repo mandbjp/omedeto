@@ -10,11 +10,22 @@ $ ->
     data:
       nickname: ""
     created: () ->
+      db.getItem "nickname"
+      .then (val) =>
+        @nickname = val
+        return
+      .catch (err) ->
+        console.log err
+        return
       return
     methods:
-      selectMenu: (view) ->
+      # ニックネーム設定
+      setNickname: () ->
         if @nickname
           db.setItem "nickname", @nickname
+        return
+      # メニュー選択
+      selectMenu: (view) ->
         location.href = "/#{view}"
         return
   return
