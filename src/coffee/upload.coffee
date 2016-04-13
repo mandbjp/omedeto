@@ -22,9 +22,11 @@ $ ->
       selectedFile: null
       message: ""
       viewSendBtnDissabled: true
-      viewThumbnailUploadTriggered: false
+      viewShowVideoUploading: true
       viewShowFileSelect: true
       viewShowVideoPreview: false
+      viewSendButtonText: "登録する"
+
     created: () ->
       db.getItem "nickname"
       .then (val) =>
@@ -38,6 +40,7 @@ $ ->
         fileList = e.target.files
         @viewShowFileSelect = false
         @viewShowVideoPreview = true
+        @viewShowVideoUploading = true
 
         # クライアントサイドのみで動画を再生する
         # @see http://jsfiddle.net/Ronny/P2NpU/
@@ -58,7 +61,7 @@ $ ->
             @vid = result.data.vid
             @tid = result.data.tid
             if @vid
-              # @videoPath = "/files/#{@vid}"  # アップロードした動画をロードする必要はあるか？
+              @viewShowVideoUploading = false
               @viewSendBtnDissabled = false
           return
         .catch (err) ->
@@ -81,6 +84,9 @@ $ ->
         if @vid.length is 0
           alert "アップロードが完了するまで待ってください！"
           return
+        if !confirm("この動画を登録しますか？\n\n注意: 動画を登録すると自分では削除できません!")
+          return
+
         param =
           vid: @vid
           tid: @tid
@@ -90,7 +96,8 @@ $ ->
         .create param
         .then (result) =>
           if result.ok
-            alert "ご協力ありがとうございます。"
+            @viewSendButtonText = "登録しました！"
+            @viewSendBtnDissabled = true
           return
         .catch (err) ->
           console.log err
