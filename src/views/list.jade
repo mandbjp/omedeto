@@ -43,6 +43,7 @@ block script
           .imageLayout
             img.img-thumbnail(:src="video.imagePath")
           .caption
+            .index(v-text="'# ' + ($index + 1)")
             .nickname
               span.icon.glyphicon.glyphicon-user
               span.text(v-text="video.nickname")
