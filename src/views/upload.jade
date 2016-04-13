@@ -18,7 +18,7 @@ block script
             .step-container.step-margin-bottom
               .step-title="アップロード"
               .step-message="10秒お祝いメッセージ動画を撮影してください！"
-            button.shooting.btn.btn-success.fileinput-button
+            button.capture.btn.btn-success.fileinput-button
               input#upload(type="file", name="file", accept="video/*", @change="upload")
               span.glyphicon.glyphicon-camera
               span.text="撮影する"
@@ -30,18 +30,27 @@ block script
             .form-group
               .video
                 video(:src="videoPath", loop, autoplay, preload="true", controls, @play="video_play")
-            #while-uploading-video(v-show="viewSendBtnDissabled")
+            #while-uploading-video(v-show="viewShowVideoUploading")
               .step-container
                 .step-message="動画を送信中です…"
               .form-group
                 img.loading(src="/images/loading.svg", alt="Loading icon")
-            #post-upload-video(v-show="!viewSendBtnDissabled")
+            #post-upload-video
+              .step-container.step-margin-bottom(v-show="!viewShowVideoUploading")
+                .step-message
+                  span.glyphicon.glyphicon-ok
+                  |&nbsp;
+                  span.text="動画を送信しました！"
               .step-container
-                .step-message="確認した動画でよければ送るボタンで送信！"
+                .step-message="確認した動画でよければ登録ボタンで送信！"
               .form-group
-                button.send.btn.btn-success(@click="send", :disabled="sendBtnDissabled")
+                button.send.btn.btn-success(@click="send", :disabled="viewSendBtnDissabled")
                   span.glyphicon.glyphicon-envelope
-                  span.text="送る"
+                  span.text
+                    |{{viewSendButtonText}}
+              .notice
+                span.text
+                  |注意: 登録すると自分で削除できません！
             #reload-page
               .step-container
                 .step-message="やり直す場合はこちら"

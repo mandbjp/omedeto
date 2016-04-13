@@ -66,7 +66,7 @@ insertData = (data) ->
     sid = data.sid
     vid = data.vid
     tid = data.tid
-    nickname = data.message
+    nickname = data.nickname
     order = data.order
 
     doc =
@@ -106,7 +106,7 @@ updateData = (data) ->
     sid = data.sid
     vid = data.vid
     tid = data.tid
-    nickname = data.message
+    nickname = data.nickname
     order = data.order
 
     crt =
