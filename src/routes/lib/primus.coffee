@@ -35,8 +35,8 @@ exports.send = (data) ->
       ms =
         type: type
         nickname: data.nickname
-        content: data.content
-        ekey: data.ekey
+        text: data.text
+        stamp: data.stamp
 
     primus
       .in room
