@@ -1,4 +1,4 @@
-extends layout
+extends lib/layout
 
 block style
   link(rel="stylesheet", href="/css/comments.css")
@@ -8,8 +8,6 @@ block content
 block script
   script(src="/js/comments.js")
   script(type="text/v-template")#template
-    #header
-      #title="Omedeto App"
     #main
       #layout
         .form-horizontal
