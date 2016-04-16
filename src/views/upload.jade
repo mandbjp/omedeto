@@ -19,9 +19,11 @@ block script
             .step-container.step-margin-bottom
               .step-title="アップロード"
               .step-message="10秒お祝いメッセージ動画を撮影してください！"
-            button.capture.btn.btn-success.fileinput-button
+            .form-group.explain
+              span.icon.omedeto.omedeto-video-shoot
+            button.capture.btn.btn-success.btn-lg.fileinput-button
               input#upload(type="file", name="file", accept="video/*", @change="upload")
-              span.glyphicon.glyphicon-camera
+              span.icon.glyphicon.glyphicon-camera
               span.text="撮影する"
 
           #check-video-message.form-group(v-show="viewShowVideoPreview")
@@ -32,10 +34,11 @@ block script
               .video
                 video(:src="videoPath", loop, autoplay, preload="true", controls, @play="video_play")
             #while-uploading-video(v-show="viewShowVideoUploading")
-              .step-container
-                .step-message="動画を送信中です…"
-              .form-group
-                img.loading(src="/images/loading.svg", alt="Loading icon")
+              .message
+                .step-container
+                  .step-message="動画を送信中です…"
+                .form-group
+                  img.loading(src="/images/loading.svg", alt="Loading icon")
             #post-upload-video
               .step-container.step-margin-bottom(v-show="!viewShowVideoUploading")
                 .step-message
