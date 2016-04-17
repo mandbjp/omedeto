@@ -50,14 +50,11 @@ block script
               .form-group
                 button.send.btn.btn-success(@click="send", :disabled="viewSendBtnDissabled")
                   span.glyphicon.glyphicon-envelope
-                  span.text
-                    |{{viewSendButtonText}}
+                  span.text(v-text="viewSendButtonText")
+                button.btn.btn-default.fileinput-button
+                  input#upload(type="file", name="file", accept="video/*", @change="upload")
+                  span.glyphicon.glyphicon-repeat
+                  span.text="動画を選びなおす"
               .notice
                 span.text
                   |注意: 登録すると自分で削除できません！
-            #reload-page
-              .step-container
-                .step-message="やり直す場合はこちら"
-              .form-group
-                button.btn.btn-defaultlink(@click="confirmAndReloadPage")
-                  span.text="動画を選びなおす"

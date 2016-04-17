@@ -1,6 +1,7 @@
 $ ->
   Vue = require "vue"
   db = require "localforage"
+  require "./lib/header"
 
   # menu画面のVueModel
   vm = new Vue
