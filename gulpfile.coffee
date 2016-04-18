@@ -66,6 +66,7 @@ gulp.task "vendor-js", () ->
 gulp.task "vendor-css", () ->
   return gulp.src [
     "./bower_components/bootstrap/dist/css/bootstrap.min.css"
+    "./vendor/css/*"
   ]
   .pipe concat "vendor.css"
   .pipe minifycss
@@ -76,6 +77,7 @@ gulp.task "vendor-css", () ->
 gulp.task "fonts", () ->
   return gulp.src [
     "./bower_components/bootstrap/dist/fonts/*"
+    "./vendor/fonts/*"
   ]
   .pipe gulp.dest "./dist/fonts"
 
