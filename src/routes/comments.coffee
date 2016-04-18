@@ -45,8 +45,8 @@ setData = (data) ->
   return Promise (resolve, reject) ->
     sid = data.sid
     nickname = data.nickname
-    content = data.content
-    ekey = data.ekey
+    text = data.text
+    stamp = data.stamp
 
     doc =
       sid: sid
@@ -54,8 +54,11 @@ setData = (data) ->
     if nickname
       doc.nickname = nickname
 
-    if content
-      doc.content = content
+    if text
+      doc.text = text
+
+    if stamp
+      doc.stamp = stamp
 
     doc.sntdt = new Date()
 
@@ -127,8 +130,8 @@ exports.create = (req, res) ->
         ok: result.ok
         type: "comment"
         nickname: param.nickname
-        content: param.content
-        ekey: param.ekey
+        text: param.text
+        stamp: param.stamp
 
       primus.send query
 

@@ -21,4 +21,7 @@ block script
             .explain
               span.index(v-text="'# ' + ($index + 1)")
               span.nickname(v-text="video.nickname")
-    .comment(v-for="comment in comments", v-text="comment.content", v-bind:style="{top: comment.top + 'px'}")
+    .comment(v-for="comment in comments", v-text="comment.text", v-bind:style="{top: comment.top + 'px'}")
+    .stamp(v-for="stamp in stamps", v-bind:style="{left: stamp.left + 'px', top: stamp.top + 'px'}")
+      img(:src="'/images/' + stamp.stamp")
+

@@ -15,11 +15,15 @@ block script
         .form-horizontal
           .form-group
             textarea.input-lg(
-              v-model="content"
+              v-model="text"
               row="5"
               placeholder="メッセージを入力"
             )
           .form-group
-            button.send.btn.btn-success(@click="send")
+            button.send.btn.btn-success(@click="sendText")
               span.glyphicon.glyphicon-envelope
               span.text="送る"
+          .form-group
+            .stampList
+              .item(v-for="stamp in stamps", @click="sendStamp(stamp)")
+                img(:src="'/images/' + stamp")

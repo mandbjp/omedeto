@@ -18,6 +18,7 @@ $ ->
       videos: []
       currentVid: ""
       comments: []
+      stamps: []
     created: () ->
       room =
         sid: "omedeto"
@@ -159,15 +160,27 @@ $ ->
                 console.log err
                 return
           else
+            width = $(window).width()
             height = $(window).height()
             top = Math.random() * (height + 1 - 50)
             data.top = top
-            @comments.push data
-
-            setTimeout () =>
-              @comments.shift()
-              return
-            , 6000
+            # Stamp
+            if data.stamp
+              left = Math.random() * (width + 1 - 50)
+              data.left = left
+              @stamps.push data
+              setTimeout () =>
+                @stamps.shift()
+                return
+              , 3000
+            # Text
+            else if data.text
+              data.top = top
+              @comments.push data
+              setTimeout () =>
+                @comments.shift()
+                return
+              , 6000
           return
         return
   return

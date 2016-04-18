@@ -13,7 +13,8 @@ $ ->
     replace: false
     data:
       nickname: ""
-      content: ""
+      text: ""
+      stamps: ["stamp001.png","stamp002.png"]
     created: () ->
       db.getItem "nickname"
       .then (val) =>
@@ -24,16 +25,28 @@ $ ->
         return
       return
     methods:
-      # 送るボタンクリック
-      send: () ->
+      # テキストを送信
+      sendText: () ->
         param =
           nickname: @nickname
-          content: @content
+          text: @text
+        @send param
+        return
 
+      # スタンプを送信
+      sendStamp: (stamp) ->
+        param =
+          nickname: @nickname
+          stamp: stamp
+        @send param
+        return
+
+      # Comment送信
+      send: (param) ->
         comments
         .create param
         .then (result) =>
-          @content = ""
+          @text = ""
           return
         .catch (err) ->
           console.log err
