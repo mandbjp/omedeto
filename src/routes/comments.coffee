@@ -2,6 +2,7 @@ Promise = require("q").promise
 mongo = require "./lib/mongo"
 ObjectID = mongo.ObjectID
 primus = require "./lib/primus"
+config = require("./../config").config
 
 getData = (query) ->
   return Promise (resolve, reject) ->
@@ -20,7 +21,7 @@ getData = (query) ->
 
     flag = if type is "count" then false else true
 
-    mongo.find "omedeto", "comment", crt, {}, opt
+    mongo.find config.mongo.db, config.mongo.collection.comment, crt, {}, opt
     .then (cursor) ->
       if flag
         cursor.toArray()
@@ -64,7 +65,7 @@ setData = (data) ->
 
     opt = {}
 
-    mongo.insert "omedeto", "comment", doc, opt
+    mongo.insert config.mongo.db, config.mongo.collection.comment, doc, opt
     .then (result) ->
       resolve result
       return
