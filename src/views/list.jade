@@ -1,12 +1,11 @@
-extends layout
+extends lib/layout
 
 block style
   link(rel="stylesheet", href="/css/list.css")
 
 block top
-  #header
-    #title="Omedeto Web"
- 
+  include lib/header
+
 block content
 
 block script

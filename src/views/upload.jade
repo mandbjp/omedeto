@@ -1,16 +1,17 @@
-extends layout
+extends lib/layout
 
 block style
   link(rel="stylesheet", href="/css/upload.css")
   link(rel="stylesheet", href="//cdn.jsdelivr.net/jquery.fileupload/9.5.2/css/jquery.fileupload.css")
+
+block top
+  include lib/header
 
 block content
 
 block script
   script(src="/js/upload.js")
   script(type="text/v-template")#template
-    #header
-      #title="Omedeto App"
     #main
       #layout
         .form-horizontal
