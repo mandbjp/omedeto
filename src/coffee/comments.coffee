@@ -5,6 +5,7 @@ $ ->
   Promise = Q.Promise
   comments = new Ajax "comments"
   db = require "localforage"
+  require "./lib/header"
 
   # 検証用コメント画面のVueModel
   vm = new Vue

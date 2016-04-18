@@ -5,6 +5,7 @@ $ ->
   Promise = Q.Promise
   files = new Ajax "files"
   videos = new Ajax "videos"
+  require "./lib/header"
 
   # index画面のVueModel
   vm = new Vue

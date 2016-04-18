@@ -7,6 +7,7 @@ $ ->
   db = require "localforage"
   files = new Ajax "files"
   videos = new Ajax "videos"
+  require "./lib/header"
 
   # upload画面のVueModel
   vm = new Vue
@@ -38,43 +39,37 @@ $ ->
       # 撮影するボタンクリック
       upload: (e) ->
         fileList = e.target.files
-        @viewShowFileSelect = false
-        @viewShowVideoPreview = true
-        @viewShowVideoUploading = true
+        if fileList.length
+          @viewShowFileSelect = false
+          @viewShowVideoPreview = true
+          @viewShowVideoUploading = true
 
-        # クライアントサイドのみで動画を再生する
-        # @see http://jsfiddle.net/Ronny/P2NpU/
-        URL = window.URL || window.webkitURL
-        if (!URL)
-          alert "your browser not supported for preview"
-          return
-        @selectedFile = fileList[0]
-        @videoPath = URL.createObjectURL @selectedFile
+          # クライアントサイドのみで動画を再生する
+          # @see http://jsfiddle.net/Ronny/P2NpU/
+          URL = window.URL || window.webkitURL
+          if (!URL)
+            alert "your browser not supported for preview"
+            return
+          @selectedFile = fileList[0]
+          @videoPath = URL.createObjectURL @selectedFile
 
-        # Videoのアップロード
-        param = new FormData()
-        param.append "file", @selectedFile
-        @.$http.post "/files", param, {}
-        .then (result) =>
-          console.log "video sent"
-          if result.status is 200
-            @vid = result.data.vid
-            @tid = result.data.tid
-            if @vid
-              @viewShowVideoUploading = false
-              @viewSendBtnDissabled = false
-          return
-        .catch (err) ->
-          console.log "error on video upload", err
-          return
+          # Videoのアップロード
+          param = new FormData()
+          param.append "file", @selectedFile
+          @.$http.post "/files", param, {}
+          .then (result) =>
+            if result.status is 200
+              @vid = result.data.vid
+              @tid = result.data.tid
+              if @vid
+                @viewShowVideoUploading = false
+                @viewSendBtnDissabled = false
+            return
+          .catch (err) ->
+            console.log "error on video upload", err
+            return
         return
           
-      confirmAndReloadPage: () ->
-        if confirm("もう一度動画を選択しますか？")
-          window.location.reload()    # reload() でDOMや変数初期化、ajax通信などもキャンセル
-        
-        return
-      
       video_play: () ->
         # 動画が再生された時
         return
