@@ -2,17 +2,18 @@ mongo = require "./lib/mongo"
 Promise = require("q").promise
 fs = require "fs"
 ffmpeg = require "fluent-ffmpeg"
+config = require("./../config").config
 
 insertFile = (filePath) ->
   stream = fs.createReadStream filePath
-  mongo.insertGridFS 'file', stream, {}
+  mongo.insertGridFS config.mongo.filedb, stream, {}
 
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
     uploadDir = "upload"  # should end without slash
     thumbnailFilePath = ""
     command = ffmpeg filePath
-    opt = 
+    opt =
       filename: "%b.thunmbnail.png"
       folder: uploadDir
       timemarks: ["1"]
@@ -31,7 +32,7 @@ exports.create = (req, res) ->
   file = req.files.file
   filePath = file.path
   thumbnailFilePath = ""
-  data = 
+  data =
     vid: ""
     tid: ""
   
@@ -70,7 +71,7 @@ exports.create = (req, res) ->
 exports.show = (req, res) ->
   _id = req.params.id
 
-  mongo.findGridFS "file", _id, {}
+  mongo.findGridFS config.mongo.filedb, _id, {}
   .then (result) ->
     if result
       data = result.data

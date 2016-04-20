@@ -7,6 +7,11 @@ exports.config =
     options:
       poolSize: 10
       auto_reconnect: true
+    db: "omedeto"
+    collection:
+      video: "video"
+      comment: "comment"
+    filedb: "file"
   auth:
     admin:
       user: "admin"
