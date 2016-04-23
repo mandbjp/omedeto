@@ -130,57 +130,60 @@ $ ->
 
       # WebSocket接続
       connectWS: (room) ->
-        primus.write room
-        primus.on "data", (data) =>
-          if data.type is "video"
-            if data._id
-              @getVideo data._id
-              .then (result) =>
-                if result
-                  if result.tid
-                    imagePath = "/files/#{result.tid}"
-                  else
-                    imagePath = "/images/noimage.png"
+        # Join
+        primus.send "join", room
+        # Videoを受け取る
+        primus.on "video", (data) =>
+          if data._id
+            @getVideo data._id
+            .then (result) =>
+              if result
+                if result.tid
+                  imagePath = "/files/#{result.tid}"
+                else
+                  imagePath = "/images/noimage.png"
 
-                  if result.vid
-                    videoPath = "/files/#{result.vid}"
+                if result.vid
+                  videoPath = "/files/#{result.vid}"
  
-                  unless result.nickname
-                    result.nickname = "不明"
+                unless result.nickname
+                  result.nickname = "不明"
 
-                  @videos.push
-                    _id: result._id
-                    nickname: result.nickname
-                    imagePath: imagePath
-                    vid: result.vid
-                    videoPath: videoPath
-                    selected: false
-                return
-              .catch (err) ->
-                console.log err
-                return
-          else
-            width = $(window).width()
-            height = $(window).height()
-            top = Math.random() * (height + 1 - 50)
+                @videos.push
+                  _id: result._id
+                  nickname: result.nickname
+                  imagePath: imagePath
+                  vid: result.vid
+                  videoPath: videoPath
+                  selected: false
+              return
+            .catch (err) ->
+              console.log err
+              return
+          return
+        # Commentを受け取る
+        primus.on "comment", (data) =>
+          width = $(window).width()
+          height = $(window).height()
+          top = Math.random() * (height + 1 - 50)
+          data.top = top
+          # Stamp
+          if data.stamp
+            left = Math.random() * (width + 1 - 50)
+            data.left = left
+            @stamps.push data
+            setTimeout () =>
+              @stamps.shift()
+              return
+            , 3000
+          # Text
+          else if data.text
             data.top = top
-            # Stamp
-            if data.stamp
-              left = Math.random() * (width + 1 - 50)
-              data.left = left
-              @stamps.push data
-              setTimeout () =>
-                @stamps.shift()
-                return
-              , 3000
-            # Text
-            else if data.text
-              data.top = top
-              @comments.push data
-              setTimeout () =>
-                @comments.shift()
-                return
-              , 6000
+            @comments.push data
+            setTimeout () =>
+              @comments.shift()
+              return
+            , 6000
           return
         return
   return

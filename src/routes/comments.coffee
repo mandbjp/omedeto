@@ -8,6 +8,8 @@ getData = (query) ->
   return Promise (resolve, reject) ->
     _id = query._id
     type = query.type
+    skip = query.skip
+    limit = query.limit
 
     crt =
       sid: "omedeto"
@@ -17,7 +19,17 @@ getData = (query) ->
 
     opt =
       sort:
-        sntdt: 1
+        sntdt: -1
+
+    if skip
+      opt.skip = +skip
+    else
+      opt.skip = 0
+
+    if limit
+      opt.limit = +limit
+    else
+      opt.limit = 10
 
     flag = if type is "count" then false else true
 
@@ -48,6 +60,7 @@ setData = (data) ->
     nickname = data.nickname
     text = data.text
     stamp = data.stamp
+    sntdt = data.sntdt
 
     doc =
       sid: sid
@@ -61,7 +74,7 @@ setData = (data) ->
     if stamp
       doc.stamp = stamp
 
-    doc.sntdt = new Date()
+    doc.sntdt = sntdt
 
     opt = {}
 
@@ -78,24 +91,25 @@ setData = (data) ->
 # コメント一覧取得 (GET)
 exports.index = (req, res) ->
   query = req.query
-
   accept = req.headers.accept
+
   if accept.match "html"
     res.render "comments",
       pretty: true
-  return
 
-  # Validation 追加予定
-
-  getData query
-  .then (result) ->
-    res.status 200
-      .send result
-    return
-  .catch (err) ->
-    res.status err.code
-      .send err.msg
-    return
+  else
+    # Validation 追加予定
+    
+    getData query
+    .then (result) ->
+      console.log result
+      res.status 200
+        .send result
+      return
+    .catch (err) ->
+      res.status err.code
+        .send err.msg
+      return
   return
 
 # コメント情報取得 (GET)
@@ -121,6 +135,7 @@ exports.show = (req, res) ->
 exports.create = (req, res) ->
   param = req.body
   param.sid = "omedeto"
+  param.sntdt = new Date()
 
   # Validation 追加予定
   setData param
@@ -129,12 +144,12 @@ exports.create = (req, res) ->
     if status is 200
       query =
         ok: result.ok
-        type: "comment"
         nickname: param.nickname
         text: param.text
         stamp: param.stamp
+        sntdt: param.sntdt
 
-      primus.send query
+      primus.sendComment query
 
     res.status status
       .send result

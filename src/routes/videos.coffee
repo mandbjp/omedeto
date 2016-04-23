@@ -195,10 +195,9 @@ exports.create = (req, res) ->
     if status is 200
       query =
         ok: result.ok
-        type: "video"
         _id: result._id
 
-      primus.send query
+      primus.sendVideo query
 
     res.status status
       .send result
