@@ -53,6 +53,10 @@ app.use basicAuth (user, pass) ->
   else
     return false
 
+# ファイル取得
+file = require "./routes/files"
+app.get "/files/:id/:size", file.show
+
 # Web-APIの各ターゲットに処理をマップする
 files = []
 for val in fs.readdirSync "./routes"
