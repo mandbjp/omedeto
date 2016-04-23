@@ -14,6 +14,8 @@ createThumbnail = (filePath) ->
     outputStream = fs.createWriteStream thumbnailFilePath
 
     console.log "createThumbnail", 0
+    console.log "createThumbnail", 0, filePath
+    console.log "createThumbnail", 0, thumbnailFilePath
     ffmpeg = child_process.spawn("ffmpeg", [
       "-i", filePath,
       "-ss", "00:00:01.000",
