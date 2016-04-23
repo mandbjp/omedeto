@@ -1,4 +1,5 @@
 Primus = require "primus"
+Emitter = require "primus-emitter"
 Rooms = require "primus-rooms"
 
 primus = undefined
@@ -10,11 +11,12 @@ exports.init = (server) ->
     parser: "JSON"
     transformer: "sockjs"
 
+  primus.use "emitter", Emitter
   primus.use "rooms", Rooms
 
   # Connect
   primus.on "connection", (spark) ->
-    spark.on "data", (data) ->
+    spark.on "join", (data) ->
       sid = data.sid
       room = sid
       spark.join room
@@ -23,22 +25,25 @@ exports.init = (server) ->
     return
 
 # Websocketメッセージ
-exports.send = (data) ->
+exports.sendVideo = (data) ->
   if data.ok
-    type = data.type
-    if type is "video"
-      ms =
-        type: type
-        _id: data._id
-
-    else if type is "comment"
-      ms =
-        type: type
-        nickname: data.nickname
-        text: data.text
-        stamp: data.stamp
+    ms =
+      _id: data._id
 
     primus
       .in room
-      .write ms
+      .send "video", ms
+  return
+
+exports.sendComment = (data) ->
+  if data.ok
+    ms =
+      nickname: data.nickname
+      text: data.text
+      stamp: data.stamp
+      sntdt: data.sntdt
+
+  primus
+    .in room
+    .send "comment", ms
   return

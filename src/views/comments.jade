@@ -9,22 +9,31 @@ block top
 block content
 
 block script
+  script(src="/primus/primus.js")
   script(src="/js/comments.js")
   script(type="text/v-template")#template
     #main
       #layout
         .form-horizontal
-          .form-group
-            textarea.input-lg(
-              v-model="text"
-              row="5"
-              placeholder="メッセージを入力"
-            )
-          .form-group
-            button.send.btn.btn-success(@click="sendText")
-              span.glyphicon.glyphicon-envelope
-              span.text="送る"
-          .form-group
-            .stampList
+          .form-group.history
+            #history
+              .commentList
+                .item(v-for="comment in comments")
+                  span.nickname(v-text="comment.nickname + ': '")
+                  span.commentContents
+                    span.text(v-show="comment.text", v-text="comment.text")
+                    template(v-if="comment.stamp")
+                      img.stamp(:src="'/images/' + comment.stamp")
+                    span.sntdt(v-text="'(' + comment.sntdt + ')'")
+          .input-container
+            .input-group
+              span.input-group-btn
+                button.stamp.btn.btn-default(type="button", @click="toggleStamp")
+                  span.text="Stamp"
+              input.form-control(type="text", v-model="text", placeholder="メッセージを入力", @keyup.enter="sendText")
+              span.input-group-btn
+                button.send.btn.btn-success(type="button", @click="sendText")
+                  span.text="送信"
+            .stampList(v-if="stampView")
               .item(v-for="stamp in stamps", @click="sendStamp(stamp)")
                 img(:src="'/images/' + stamp")

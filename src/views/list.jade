@@ -17,7 +17,7 @@ block script
         .input-group.input-group-sm
           input.form-control(type="text", v-model="query.search", placeholder="ニックネームで検索", @keyup.enter="reloadList")
           span.input-group-btn
-            button.btn.btn-primary(type="button", @click="reloadList")
+            button.searchBtn.btn.btn-primary(type="button", @click="reloadList")
               span.glyphicon.glyphicon-search
       - if(admin)
         .orderby.col-xs-12.col-sm-12.col-md-6.col-lg-6
