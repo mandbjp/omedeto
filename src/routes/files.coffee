@@ -10,28 +10,48 @@ insertFile = (filePath) ->
 
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
-    uploadDir = "upload"  # should end without slash
-    thumbnailFilePath = ""
-    console.log "createThumbnail", 1
-    command = ffmpeg filePath
-    console.log "createThumbnail", 2, command
-    opt =
-      filename: "%b.thunmbnail.png"
-      folder: uploadDir
-      timemarks: ["1"]
-      
-    command
-    .on "filenames", (filenames) ->
-      console.log "createThumbnail", 3, "filenames", filenames
-      thumbnailFilePath = uploadDir + "/" + filenames[0]
-    .on "end", () ->
-      console.log "createThumbnail", 4, "end"
+    thumbnailFilePath = filePath + ".thunmbnail.png"
+    outputStream = fs.
+    ffmpeg = child_process.spawn("ffmpeg", [
+      "-i", filePath,
+      "-ss", "00:00:01.000",
+      "-vframes", "1",
+      thumbnailFilePath
+      ]);
+    ffmpeg.stderr.on "end", () ->
+      console.log "createThumbnail", 1, "end"
       resolve thumbnailFilePath
-    .on "error", (err) ->
+    ffmpeg.stderr.on "error", (err) ->
       console.log "createThumbnail", 5, "error", err
       reject err.message
-    .screenshots opt
-    console.log "createThumbnail", 9
+
+    ffmpeg.stderr.on "exit", () ->
+      console.log "createThumbnail", 6, "exit"
+    ffmpeg.stderr.on "close", () ->
+      console.log "createThumbnail", 7, "close"
+    
+    # uploadDir = "upload"  # should end without slash
+    # thumbnailFilePath = ""
+    # console.log "createThumbnail", 1
+    # command = ffmpeg filePath
+    # console.log "createThumbnail", 2, command
+    # opt =
+    #   filename: "%b.thunmbnail.png"
+    #   folder: uploadDir
+    #   timemarks: ["1"]
+      
+    # command
+    # .on "filenames", (filenames) ->
+    #   console.log "createThumbnail", 3, "filenames", filenames
+    #   thumbnailFilePath = uploadDir + "/" + filenames[0]
+    # .on "end", () ->
+    #   console.log "createThumbnail", 4, "end"
+    #   resolve thumbnailFilePath
+    # .on "error", (err) ->
+    #   console.log "createThumbnail", 5, "error", err
+    #   reject err.message
+    # .screenshots opt
+    # console.log "createThumbnail", 9
 
 # ファイル格納
 exports.create = (req, res) ->
