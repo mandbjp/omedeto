@@ -34,7 +34,7 @@ $ ->
           @query.skip += results.length
           for val in results
             if val.tid
-              val.imagePath = "/files/#{val.tid}"
+              val.imagePath = "/files/#{val.tid}/300x300"
             else
               val.imagePath = "/images/noimage.png"
             unless val.nickname
@@ -118,7 +118,7 @@ $ ->
             result.videoPath = "/files/#{result.vid}"
 
           if result.tid
-            result.imagePath = "/files/#{result.tid}"
+            result.imagePath = "/files/#{result.tid}/300x300"
           else
             result.imagePath = "/images/noimage.png"
 
