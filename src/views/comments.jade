@@ -28,7 +28,7 @@ block script
           .input-container
             .input-group
               span.input-group-btn
-                button.btn.btn-default(type="button", @click="toggleStamp")
+                button.stamp.btn.btn-default(type="button", @click="toggleStamp")
                   span.text="Stamp"
               input.form-control(type="text", v-model="text", placeholder="メッセージを入力", @keyup.enter="sendText")
               span.input-group-btn

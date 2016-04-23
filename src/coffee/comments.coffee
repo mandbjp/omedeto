@@ -112,6 +112,7 @@ $ ->
           nickname: @nickname
           stamp: stamp
         @send param
+        @stampView = false
         return
 
       # Comment送信
