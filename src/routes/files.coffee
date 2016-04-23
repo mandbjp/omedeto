@@ -12,7 +12,9 @@ createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
     uploadDir = "upload"  # should end without slash
     thumbnailFilePath = ""
+    console.log "createThumbnail", 1
     command = ffmpeg filePath
+    console.log "createThumbnail", 2, command
     opt =
       filename: "%b.thunmbnail.png"
       folder: uploadDir
@@ -20,12 +22,16 @@ createThumbnail = (filePath) ->
       
     command
     .on "filenames", (filenames) ->
+      console.log "createThumbnail", 3, "filenames", filenames
       thumbnailFilePath = uploadDir + "/" + filenames[0]
     .on "end", () ->
+      console.log "createThumbnail", 4, "end"
       resolve thumbnailFilePath
     .on "error", (err) ->
+      console.log "createThumbnail", 5, "error"
       reject err.message
     .screenshots opt
+    console.log "createThumbnail", 9
 
 # ファイル格納
 exports.create = (req, res) ->
