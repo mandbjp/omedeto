@@ -11,7 +11,8 @@ insertFile = (filePath) ->
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
     thumbnailFilePath = filePath + ".thunmbnail.png"
-    outputStream = fs.
+
+    console.log "createThumbnail", 0
     ffmpeg = child_process.spawn("ffmpeg", [
       "-i", filePath,
       "-ss", "00:00:01.000",
