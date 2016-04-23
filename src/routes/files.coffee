@@ -16,7 +16,7 @@ createThumbnail = (filePath) ->
     console.log "createThumbnail", 0
     console.log "createThumbnail", 0, filePath
     console.log "createThumbnail", 0, thumbnailFilePath
-    ffmpeg = child_process.spawn("ffmpeg", [
+    ffmpeg = child_process.spawn("/usr/bin/ffmpeg", [
       "-i", filePath,
       "-ss", "00:00:01.000",
       "-vframes", "1",
