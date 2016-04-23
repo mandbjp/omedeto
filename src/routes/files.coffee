@@ -11,16 +11,18 @@ insertFile = (filePath) ->
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
     thumbnailFilePath = filePath + ".thunmbnail.png"
+    outputStream = fs.createWriteStream thumbnailFilePath
 
     console.log "createThumbnail", 0
     ffmpeg = child_process.spawn("ffmpeg", [
       "-i", filePath,
       "-ss", "00:00:01.000",
       "-vframes", "1",
-      thumbnailFilePath
+      "pipe:1"
       ]);
+    ffmpeg.stdout.pipe(outputStream)
     ffmpeg.stderr.on "end", () ->
-      console.log "createThumbnail", 1, "end"
+      console.log "createThumbnail", 4, "end"
       resolve thumbnailFilePath
     ffmpeg.stderr.on "error", (err) ->
       console.log "createThumbnail", 5, "error", err
@@ -30,6 +32,8 @@ createThumbnail = (filePath) ->
       console.log "createThumbnail", 6, "exit"
     ffmpeg.stderr.on "close", () ->
       console.log "createThumbnail", 7, "close"
+      
+    console.log "createThumbnail", 1
     
     # uploadDir = "upload"  # should end without slash
     # thumbnailFilePath = ""
