@@ -22,6 +22,7 @@ createThumbnail = (filePath) ->
       "-vframes", "1",
       "pipe:1"
       ]);
+    console.log "createThumbnail", 1, ffmpeg
     ffmpeg.stdout.pipe(outputStream)
     ffmpeg.stderr.on "end", () ->
       console.log "createThumbnail", 4, "end"
