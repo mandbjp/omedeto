@@ -43,20 +43,6 @@ body
           button.send
             background-color concept-color - 60%
 
-          .stampList
-            .item
-              position relative
-              width 80px
-              height 80px
-              padding 10px
-              float left
-              cursor pointer
-
-              img
-                width 100%
-
-            .item:hover
-              background-color #eee
         .form-group.history
           position relative
           width 100%
@@ -77,22 +63,75 @@ body
                 width 100%
                 text-align left
                 float left
-                margin 7px 0
+                margin 3px 0
 
-                span.text
-                  background-color #eee
-                  padding 5px
-                  border-radius 10px
+                span.nickname
+                  max-width 30%
+                  float left
+                  padding 5px 0
 
-                span.sntdt
-                  font-size 10px
+                span.commentContents
+                  max-width 70%
+                  float left
+                  padding-left 5px
 
-                img.stamp
-                  width 40px
-                  height 40px
+                  span.text
+                    float left
+                    background-color #eee
+                    padding 5px
+                    border-radius 10px
 
-        .input-group
+                  span.text::before
+                    position absolute
+                    content ""
+                    border 5px solid
+                    border-color transparent #eee transparent transparent
+                    margin-left -14px
+                    margin-top 5px
+
+                  img.stamp
+                    float left
+                    width 40px
+                    height 40px
+
+                  span.sntdt
+                    float left
+                    font-size 10px
+                    line-height 30px
+                    padding-left 5px
+
+        .input-container
           position fixed
           bottom 0
           left 0
           padding 3%
+
+          .input-group
+            position relative
+            width 100%
+            float left
+
+            .send
+              background-color concept-color - 60%
+
+          .stampList
+            position relative
+            width 100%
+            float left
+            backgroun-color #eee
+
+            .item
+              position relative
+              width 80px
+              height 80px
+              padding 10px
+              float left
+              cursor pointer
+
+              img
+                width 100%
+
+            .item:hover
+              background-color #eee
+
+

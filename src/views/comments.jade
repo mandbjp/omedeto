@@ -20,16 +20,20 @@ block script
               .commentList
                 .item(v-for="comment in comments")
                   span.nickname(v-text="comment.nickname + ': '")
-                  span.text(v-show="comment.text", v-text="comment.text")
-                  template(v-if="comment.stamp")
-                    img.stamp(:src="'/images/' + comment.stamp")
-                  span.sntdt(v-text="'(' + comment.sntdt + ')'")
-          .input-group
-            input.form-control(type="text", v-model="text", placeholder="メッセージを入力", @keyup.enter="sendText")
-            span.input-group-btn
-              button.btn.btn-primary(type="button", @click="sendText")
-                span.text="送る"
-          //- .form-group
-          //-   .stampList
-          //-     .item(v-for="stamp in stamps", @click="sendStamp(stamp)")
-          //-       img(:src="'/images/' + stamp")
+                  span.commentContents
+                    span.text(v-show="comment.text", v-text="comment.text")
+                    template(v-if="comment.stamp")
+                      img.stamp(:src="'/images/' + comment.stamp")
+                    span.sntdt(v-text="'(' + comment.sntdt + ')'")
+          .input-container
+            .input-group
+              span.input-group-btn
+                button.btn.btn-default(type="button", @click="toggleStamp")
+                  span.text="Stamp"
+              input.form-control(type="text", v-model="text", placeholder="メッセージを入力", @keyup.enter="sendText")
+              span.input-group-btn
+                button.send.btn.btn-success(type="button", @click="sendText")
+                  span.text="送信"
+            .stampList(v-if="stampView")
+              .item(v-for="stamp in stamps", @click="sendStamp(stamp)")
+                img(:src="'/images/' + stamp")

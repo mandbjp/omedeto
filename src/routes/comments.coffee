@@ -102,7 +102,6 @@ exports.index = (req, res) ->
     
     getData query
     .then (result) ->
-      console.log result
       res.status 200
         .send result
       return

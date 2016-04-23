@@ -22,6 +22,7 @@ $ ->
       query:
         skip: 0
         limit: 20
+      stampView: false
     created: () ->
       db.getItem "nickname"
       .then (val) =>
@@ -37,23 +38,45 @@ $ ->
       return
     methods:
       loadMore: () ->
-        @getComments @query
-        .then (results) =>
-          @query.skip += results.length
-          for val in results
-            if val.sntdt
-              val.sntdt = moment(new Date(val.sntdt)).format "MM/DD HH:mm"
-            @comments.unshift val
+        return Promise (resolve, reject) =>
+          @getComments @query
+          .then (results) =>
+            @query.skip += results.length
+            for val in results
+              if val.sntdt
+                val.sntdt = moment(new Date(val.sntdt)).format "MM/DD HH:mm"
+              @comments.unshift val
+            resolve()
+            return
+          .catch (err) ->
+            console.log err
+            resolve()
+            return
           return
-        .catch (err) ->
-          console.log err
-          return
-        return
 
       # Reload
       reloadList: () ->
         @comments = []
         @loadMore()
+        .then () ->
+          setTimeout () ->
+            $("#history").scrollTop $(".commentList").height()
+            return
+          , 10
+          return
+        $("#history").scroll (e) =>
+          target = e.target
+          #clientHeight = target.clientHeight
+          #scrollHeight = target.scrollHeight
+          #maxScroll = scrollHeight - clientHeight
+          scrollTop = target.scrollTop
+          #console.log clientHeight
+          #console.log scrollHeight
+          #console.log maxScroll
+          console.log scrollTop
+          if scrollTop is 0
+            @loadMore()
+          return
         return
 
       # Comment一覧取得
@@ -69,6 +92,10 @@ $ ->
             reject err
             return
           return
+
+      toggleStamp: () ->
+        @stampView = if @stampView then false else true
+        return
 
       # テキストを送信
       sendText: () ->
@@ -112,7 +139,7 @@ $ ->
             setTimeout () ->
               $("#history").scrollTop $(".commentList").height()
               return
-            , 100
+            , 10
           return
         return
   return
