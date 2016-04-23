@@ -28,7 +28,7 @@ createThumbnail = (filePath) ->
       console.log "createThumbnail", 4, "end"
       resolve thumbnailFilePath
     .on "error", (err) ->
-      console.log "createThumbnail", 5, "error"
+      console.log "createThumbnail", 5, "error", err
       reject err.message
     .screenshots opt
     console.log "createThumbnail", 9
