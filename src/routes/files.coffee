@@ -1,8 +1,9 @@
 mongo = require "./lib/mongo"
 Promise = require("q").promise
 fs = require "fs"
-ffmpeg = require "fluent-ffmpeg"
 config = require("./../config").config
+child_process = require "child_process"
+
 
 insertFile = (filePath) ->
   stream = fs.createReadStream filePath
@@ -10,22 +11,29 @@ insertFile = (filePath) ->
 
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
-    uploadDir = "upload"  # should end without slash
-    thumbnailFilePath = ""
-    command = ffmpeg filePath
-    opt =
-      filename: "%b.thunmbnail.png"
-      folder: uploadDir
-      timemarks: ["1"]
+    thumbnailFilePath = filePath + ".thunmbnail.jpg"
+    ffmpeg = child_process.spawn("ffmpeg", [
+      "-i", filePath,
+      "-ss", "00:00:01.000",
+      "-f", "mjpeg"
+      "-vframes", "1",
+      thumbnailFilePath
+      ])
+    
+    ffmpeg.stdout.on "close", () ->
+      # file exists check
+      # @see http://stackoverflow.com/questions/17699599/node-js-check-exist-file
+      fs.stat thumbnailFilePath, (err, stat) ->
+        if (err == null)
+          # console.log('File exists');
+          resolve thumbnailFilePath
+        else if err.code == 'ENOENT'
+          reject "thumbnail creation failed. (ENOENT)"
+        else
+          reject "thumbnail creation failed. (Unknown: " + err.code + ")"
       
-    command
-    .on "filenames", (filenames) ->
-      thumbnailFilePath = uploadDir + "/" + filenames[0]
-    .on "end", () ->
-      resolve thumbnailFilePath
-    .on "error", (err) ->
-      reject err.message
-    .screenshots opt
+    ffmpeg.stderr.on "error", () ->
+      reject "error on spawning ffmpeg"
 
 # ファイル格納
 exports.create = (req, res) ->
@@ -39,16 +47,19 @@ exports.create = (req, res) ->
   # 動画ファイルをmongoにinsert
   insertFile filePath
   .then (result) ->
+    console.log "[files.create][1/3] video inserted.", result
     data.vid = result
     createThumbnail filePath
     
   # サムネイル画像を生成
   .then (result) ->
+    console.log "[files.create][2/3] thumbnail created.", result
     thumbnailFilePath = result
     insertFile thumbnailFilePath
   
   # サムネイルをmongoにinsert
   .then (result) ->
+    console.log "[files.create][3/3] thumbnail inserted."
     data.tid = result
     return
     
@@ -62,6 +73,7 @@ exports.create = (req, res) ->
     
   # エラーレスポンス
   .catch (err) ->
+    console.log "[files.create][ERROR]", err
     res.status 500
       .send err
     return
