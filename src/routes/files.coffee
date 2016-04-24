@@ -12,7 +12,7 @@ insertFile = (filePath) ->
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
     thumbnailFilePath = filePath + ".thunmbnail.jpg"
-    ffmpeg = child_process.spawn("/usr/bin/ffmpeg", [
+    ffmpeg = child_process.spawn("ffmpeg", [
       "-i", filePath,
       "-ss", "00:00:01.000",
       "-f", "mjpeg"
