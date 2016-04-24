@@ -35,9 +35,6 @@ $ ->
           if val.vid
             videoPath = "/files/#{val.vid}"
  
-          unless val.nickname
-            val.nickname = "不明"
-
           @videos.push
             _id: val._id
             nickname: val.nickname
@@ -56,6 +53,15 @@ $ ->
         return
       .catch (err) ->
         console.log err
+        return
+
+      # Windowリサイズ
+      $(window).resize () =>
+        for val, index in @videos
+          if val.vid is @currentVid
+            width = $(window).width()
+            # 選択動画を表示
+            $("#view").scrollLeft width * index
         return
       return
     methods:
@@ -146,9 +152,6 @@ $ ->
                 if result.vid
                   videoPath = "/files/#{result.vid}"
  
-                unless result.nickname
-                  result.nickname = "不明"
-
                 @videos.push
                   _id: result._id
                   nickname: result.nickname
