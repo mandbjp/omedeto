@@ -24,10 +24,15 @@ createThumbnail = (filePath) ->
       "-vframes", "1",
       thumbnailFilePath
       ]);
-    console.log "createThumbnail", 1, ffmpeg
+    console.log "createThumbnail", 1
     
-    # ffmpeg.stderr.on "data", () ->
-    #   console.log "createThumbnail", 4, "data"
+    ffmpeg.stdout.on "close", () ->
+      console.log "createThumbnail", 3, "stderr close"
+      resolve thumbnailFilePath
+    console.log "createThumbnail", 2
+    
+    ffmpeg.stderr.on "data", () ->
+      console.log "createThumbnail", 4, "data"
     ffmpeg.stderr.on "exit", () ->
       console.log "createThumbnail", 6, "exit"
     ffmpeg.stderr.on "close", () ->
