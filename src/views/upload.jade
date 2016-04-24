@@ -36,17 +36,12 @@ block script
             #while-uploading-video(v-show="viewShowVideoUploading")
               .message
                 .step-container
-                  .step-message="動画を送信中です…"
+                  .step-message="動画を読み込み中です..."
                 .form-group
                   img.loading(src="/images/loading.svg", alt="Loading icon")
             #post-upload-video
               .step-container.step-margin-bottom(v-show="!viewShowVideoUploading")
-                .step-message
-                  span.glyphicon.glyphicon-ok
-                  |&nbsp;
-                  span.text="動画を送信しました！"
-              .step-container
-                .step-message="確認した動画でよければ登録ボタンで送信！"
+                .step-message="こちらの動画でよろしければ、登録ボタンで送信！"
               .form-group
                 button.send.btn.btn-success(@click="send", :disabled="viewSendBtnDissabled")
                   span.glyphicon.glyphicon-envelope

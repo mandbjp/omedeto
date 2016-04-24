@@ -77,25 +77,25 @@ $ ->
       # 送るボタンクリック
       send: () ->
         if @vid.length is 0
-          alert "アップロードが完了するまで待ってください！"
+          alert "読み込みが完了するまで待ってください！"
           return
-        if !confirm("この動画を登録しますか？\n\n注意: 動画を登録すると自分では削除できません!")
-          return
+        if confirm("この動画を登録しますか？\n\n注意: 動画を登録すると自分では削除できません!")
+          param =
+            vid: @vid
+            tid: @tid
+            nickname: @nickname
 
-        param =
-          vid: @vid
-          tid: @tid
-          nickname: @nickname
-
-        videos
-        .create param
-        .then (result) =>
-          if result.ok
-            @viewSendButtonText = "登録しました！"
-            @viewSendBtnDissabled = true
-          return
-        .catch (err) ->
-          console.log err
-          return
+          videos
+          .create param
+          .then (result) =>
+            if result.ok
+              @viewSendButtonText = "登録しました！"
+              @viewSendBtnDissabled = true
+              alert "動画を登録しました。\n\nご協力ありがとうございます。"
+              location.href = "/"
+            return
+          .catch (err) ->
+            console.log err
+            return
         return
   return

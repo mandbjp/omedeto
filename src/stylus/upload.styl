@@ -65,8 +65,12 @@ body
             span.text
               margin-left 5px
 
+          button
+            border-radius 3px
+
           button.capture
             background-color concept-color - 60%
+            border solid 1px concept-color - 60%
 
             span.icon
               position absolute
@@ -79,6 +83,7 @@ body
 
           button.send
             background-color concept-color - 60%
+            border solid 1px concept-color - 60%
 
             &:disabled
               color: white - 20%
@@ -86,21 +91,39 @@ body
         #while-uploading-video
           position absolute
           width 100%
+          height 100%
           text-align center
           left 0
+          top 0
 
           .message
-            position relatvie
-            width 290px
-            height 150px
-            background-color RGBA(0,0,0,0.2)
+            position absolute
+            width 100%
+            height 100%
+            background-color RGBA(0,0,0,0.5)
             text-align center
-            border-radius 10px
             padding 20px
             display inline-block
+            color #fff
+            z-index 10
+            left 0
+            top 0
+
+            .step-container
+              text-align center
+
+              .step-message
+                width 100%
+                padding initial
+                color #fff
 
         #post-upload-video
+          width 100%
           float left
+
+          .step-message
+            text-align center
+            padding initial
 
   .notice
     padding 20px
