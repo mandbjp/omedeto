@@ -25,7 +25,6 @@ createThumbnail = (filePath) ->
       thumbnailFilePath
       ]);
     console.log "createThumbnail", 1, ffmpeg
-    ffmpeg.stdout.pipe(outputStream);
     
     # ffmpeg.stderr.on "data", () ->
     #   console.log "createThumbnail", 4, "data"
