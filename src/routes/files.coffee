@@ -67,6 +67,7 @@ exports.create = (req, res) ->
     
   # ユーザーにレスポンスを返す
   .then () ->
+    res.status 200
       .send data
     fs.unlink filePath
     fs.unlink thumbnailFilePath
