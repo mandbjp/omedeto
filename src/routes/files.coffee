@@ -13,13 +13,13 @@ insertFile = (filePath) ->
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
     thumbnailFilePath = filePath + ".thunmbnail.jpg"
-    ffmpeg = child_process.spawn "/usr/bin/ffmpeg", [
+    ffmpeg = child_process.spawn("/usr/bin/ffmpeg", [
       "-i", filePath,
       "-ss", "00:00:01.000",
       "-f", "mjpeg"
       "-vframes", "1",
       thumbnailFilePath
-      ];
+      ]);
     
     ffmpeg.stdout.on "close", () ->
       # file exists check
