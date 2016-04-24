@@ -3,6 +3,8 @@ Promise = require("q").promise
 fs = require "fs"
 ffmpeg = require "fluent-ffmpeg"
 config = require("./../config").config
+child_process = require "child_process"
+
 
 insertFile = (filePath) ->
   stream = fs.createReadStream filePath
@@ -23,20 +25,22 @@ createThumbnail = (filePath) ->
       "pipe:1"
       ]);
     console.log "createThumbnail", 1, ffmpeg
-    ffmpeg.stdout.pipe(outputStream)
-    ffmpeg.stderr.on "end", () ->
-      console.log "createThumbnail", 4, "end"
-      resolve thumbnailFilePath
-    ffmpeg.stderr.on "error", (err) ->
-      console.log "createThumbnail", 5, "error", err
-      reject err.message
-
+    ffmpeg.stdout.pipe(outputStream);
+    
+    ffmpeg.stderr.on "data", () ->
+      console.log "createThumbnail", 4, "data"
     ffmpeg.stderr.on "exit", () ->
       console.log "createThumbnail", 6, "exit"
     ffmpeg.stderr.on "close", () ->
-      console.log "createThumbnail", 7, "close"
+      console.log "createThumbnail", 7, "stderr close"
+      resolve thumbnailFilePath
+    ffmpeg.stderr.on "error", () ->
+      reject "error on spawning ffmpeg"
+
+    ffmpeg.stout.on "close", () ->
+      console.log "createThumbnail", 3, "stdout close"
       
-    console.log "createThumbnail", 1
+    console.log "createThumbnail", 2
     
     # uploadDir = "upload"  # should end without slash
     # thumbnailFilePath = ""
