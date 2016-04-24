@@ -99,7 +99,7 @@ exports.create = (req, res) ->
     
   # ユーザーにレスポンスを返す
   .then () ->
-    console.log "create then", 4, result
+    console.log "create then", 4
     res.status 200
       .send data
     fs.unlink filePath
