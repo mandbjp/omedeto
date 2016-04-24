@@ -12,61 +12,30 @@ insertFile = (filePath) ->
 
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
-    thumbnailFilePath = filePath + ".thunmbnail.png"
-    # outputStream = fs.createWriteStream thumbnailFilePath
-
-    console.log "createThumbnail", 0
-    console.log "createThumbnail", 0, filePath
-    console.log "createThumbnail", 0, thumbnailFilePath
-    ffmpeg = child_process.spawn("/usr/bin/ffmpeg", [
+    thumbnailFilePath = filePath + ".thunmbnail.jpg"
+    ffmpeg = child_process.spawn "/usr/bin/ffmpeg", [
       "-i", filePath,
       "-ss", "00:00:01.000",
+      "-f", "mjpeg"
       "-vframes", "1",
       thumbnailFilePath
-      ]);
-    console.log "createThumbnail", 1
+      ];
     
     ffmpeg.stdout.on "close", () ->
-      console.log "createThumbnail", 3, "stdout close"
-      resolve thumbnailFilePath
-    console.log "createThumbnail", 2
-    
-    # ffmpeg.stderr.on "data", () ->
-    #   console.log "createThumbnail", 4, "data"
-    # console.log "createThumbnail", 22
-    
-    # ffmpeg.stderr.on "exit", () ->
-    #   console.log "createThumbnail", 6, "exit"
-    # ffmpeg.stderr.on "close", () ->
-    #   console.log "createThumbnail", 7, "stderr close"
-    #   resolve thumbnailFilePath
-    # ffmpeg.stderr.on "error", () ->
-    #   reject "error on spawning ffmpeg"
-
-    console.log "createThumbnail", 3
-    
-    # uploadDir = "upload"  # should end without slash
-    # thumbnailFilePath = ""
-    # console.log "createThumbnail", 1
-    # command = ffmpeg filePath
-    # console.log "createThumbnail", 2, command
-    # opt =
-    #   filename: "%b.thunmbnail.png"
-    #   folder: uploadDir
-    #   timemarks: ["1"]
+      # file exists check
+      # @see http://stackoverflow.com/questions/17699599/node-js-check-exist-file
       
-    # command
-    # .on "filenames", (filenames) ->
-    #   console.log "createThumbnail", 3, "filenames", filenames
-    #   thumbnailFilePath = uploadDir + "/" + filenames[0]
-    # .on "end", () ->
-    #   console.log "createThumbnail", 4, "end"
-    #   resolve thumbnailFilePath
-    # .on "error", (err) ->
-    #   console.log "createThumbnail", 5, "error", err
-    #   reject err.message
-    # .screenshots opt
-    # console.log "createThumbnail", 9
+      fs.stat 'foo.txt', (err, stat) ->
+        if (err == null)
+          # console.log('File exists');
+          resolve thumbnailFilePath
+        else if err.code == 'ENOENT'
+          reject "thumbnail creation failed. (ENOENT)"
+        else
+          reject "thumbnail creation failed. (Unknown: " + err.code + ")"
+      
+    ffmpeg.stderr.on "error", () ->
+      reject "error on spawning ffmpeg"
 
 # ファイル格納
 exports.create = (req, res) ->
@@ -77,30 +46,27 @@ exports.create = (req, res) ->
     vid: ""
     tid: ""
   
-  console.log "create then", 0
   # 動画ファイルをmongoにinsert
   insertFile filePath
   .then (result) ->
-    console.log "create then", 1, result
+    console.log "[files.create][1/3] video inserted.", result
     data.vid = result
     createThumbnail filePath
     
   # サムネイル画像を生成
   .then (result) ->
-    console.log "create then", 2, result
+    console.log "[files.create][2/3] thumbnail created.", result
     thumbnailFilePath = result
     insertFile thumbnailFilePath
   
   # サムネイルをmongoにinsert
   .then (result) ->
-    console.log "create then", 3, result
+    console.log "[files.create][3/3] thumbnail inserted."
     data.tid = result
     return
     
   # ユーザーにレスポンスを返す
   .then () ->
-    console.log "create then", 4
-    res.status 200
       .send data
     fs.unlink filePath
     fs.unlink thumbnailFilePath
@@ -108,7 +74,7 @@ exports.create = (req, res) ->
     
   # エラーレスポンス
   .catch (err) ->
-    console.log "create catch", 3, err
+    console.log "[files.create][ERROR]", err
     res.status 500
       .send err
     return
