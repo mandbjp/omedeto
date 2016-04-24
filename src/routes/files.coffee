@@ -18,7 +18,7 @@ createThumbnail = (filePath) ->
       "-f", "mjpeg"
       "-vframes", "1",
       thumbnailFilePath
-      ]);
+      ])
     
     ffmpeg.stdout.on "close", () ->
       # file exists check
