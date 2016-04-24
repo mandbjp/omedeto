@@ -24,8 +24,7 @@ createThumbnail = (filePath) ->
     ffmpeg.stdout.on "close", () ->
       # file exists check
       # @see http://stackoverflow.com/questions/17699599/node-js-check-exist-file
-      
-      fs.stat 'foo.txt', (err, stat) ->
+      fs.stat thumbnailFilePath, (err, stat) ->
         if (err == null)
           # console.log('File exists');
           resolve thumbnailFilePath
