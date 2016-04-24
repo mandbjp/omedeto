@@ -1,7 +1,6 @@
 mongo = require "./lib/mongo"
 Promise = require("q").promise
 fs = require "fs"
-ffmpeg = require "fluent-ffmpeg"
 config = require("./../config").config
 child_process = require "child_process"
 
