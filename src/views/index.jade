@@ -12,8 +12,8 @@ block script
   script(src="/js/index.js")
   script(type="text/v-template")#template
     .nickname
-      .title="ユーザ名を入れてください"
-      input.form-control(type="text", v-model="nickname", @focusout="setNickname", placeholder="動画、コメント表示時に使用します。")
+      .title="ニックネームを入力してください"
+      input.form-control(type="text", v-model="nickname", @focusout="setNickname", placeholder="動画、コメント表示時に使用します")
     .menuButton
       button.btn.btn-default.btn-lg(type="button", @click="selectMenu('upload')")
         span.icon.glyphicon.glyphicon-facetime-video
@@ -34,5 +34,5 @@ block script
         |自動でスライドショーが作れます
         br
         br
-        |コメントからスライドショーにリアルタイムでコメントすることもできちゃいますw
+        |コメントからスライドショーにリアルタイムでコメントすることもできちゃいます💕
         
