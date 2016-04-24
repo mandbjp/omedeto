@@ -23,7 +23,7 @@ $ ->
       selectedFile: null
       message: ""
       viewSendBtnDissabled: true
-      viewShowVideoUploading: true
+      viewShowVideoUploading: false
       viewShowFileSelect: true
       viewShowVideoPreview: false
       viewSendButtonText: "登録する"
