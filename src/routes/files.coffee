@@ -31,22 +31,19 @@ createThumbnail = (filePath) ->
       resolve thumbnailFilePath
     console.log "createThumbnail", 2
     
-    ffmpeg.stderr.on "data", () ->
-      console.log "createThumbnail", 4, "data"
-    console.log "createThumbnail", 22
+    # ffmpeg.stderr.on "data", () ->
+    #   console.log "createThumbnail", 4, "data"
+    # console.log "createThumbnail", 22
     
-    ffmpeg.stderr.on "exit", () ->
-      console.log "createThumbnail", 6, "exit"
-    ffmpeg.stderr.on "close", () ->
-      console.log "createThumbnail", 7, "stderr close"
-      resolve thumbnailFilePath
-    ffmpeg.stderr.on "error", () ->
-      reject "error on spawning ffmpeg"
+    # ffmpeg.stderr.on "exit", () ->
+    #   console.log "createThumbnail", 6, "exit"
+    # ffmpeg.stderr.on "close", () ->
+    #   console.log "createThumbnail", 7, "stderr close"
+    #   resolve thumbnailFilePath
+    # ffmpeg.stderr.on "error", () ->
+    #   reject "error on spawning ffmpeg"
 
-    ffmpeg.stout.on "close", () ->
-      console.log "createThumbnail", 3, "stdout close"
-      
-    console.log "createThumbnail", 2
+    console.log "createThumbnail", 3
     
     # uploadDir = "upload"  # should end without slash
     # thumbnailFilePath = ""
