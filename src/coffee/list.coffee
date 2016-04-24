@@ -38,7 +38,7 @@ $ ->
             else
               val.imagePath = "/images/noimage.png"
             unless val.nickname
-              val.nickname = "不明"
+              val.nickname = "ニックネーム未登録"
             val.checked = false
             @videos.push val
           return
@@ -59,7 +59,7 @@ $ ->
         .then (result) =>
           if result
             @count = result.count
-          @query.limit += 10
+          @query.limit += 12
           @query.type = "list"
           @loadMore()
           return

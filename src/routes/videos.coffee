@@ -37,7 +37,7 @@ getData = (query) ->
     if limit
       opt.limit = +limit
     else
-      opt.limit = 10
+      opt.limit = 12
 
     flag = if type is "count" then false else true
 

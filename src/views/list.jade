@@ -11,16 +11,15 @@ block content
 block script
   script(src="/js/list.js")
   script(type="text/v-template")#template
-    .navigator="動画一覧"
     .tool
-      .search.col-xs-12.col-sm-12.col-md-6.col-lg-6
+      .search.col-xs-12.col-sm-6.col-md-6.col-lg-4
         .input-group.input-group-sm
           input.form-control(type="text", v-model="query.search", placeholder="ニックネームで検索", @keyup.enter="reloadList")
           span.input-group-btn
             button.searchBtn.btn.btn-primary(type="button", @click="reloadList")
               span.glyphicon.glyphicon-search
       - if(admin)
-        .orderby.col-xs-12.col-sm-12.col-md-6.col-lg-6
+        .orderby.col-xs-12.col-sm-6.col-md-6.col-lg-8
           button.btn.btn-default(type="button", @click="sortMode = true", v-show="!sortMode")
             span.icon.glyphicon.glyphicon-sort
             span.text="表示順変更"
@@ -36,7 +35,7 @@ block script
               span.icon.glyphicon.glyphicon-floppy-disk
               span.text="保存"
     .list
-      .item.col-xs-6.col-sm-4.col-md-3(v-for="video in videos")
+      .item.col-xs-12.col-sm-4.col-md-3.col-lg-2(v-for="video in videos")
         .thumbnail(@click="selectItem(video._id)")
           input.checkbox(v-show="sortMode", type="checkbox", v-model="video.checked")
           .imageLayout
