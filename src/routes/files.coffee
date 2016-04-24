@@ -13,7 +13,7 @@ insertFile = (filePath) ->
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
     thumbnailFilePath = filePath + ".thunmbnail.png"
-    outputStream = fs.createWriteStream thumbnailFilePath
+    # outputStream = fs.createWriteStream thumbnailFilePath
 
     console.log "createThumbnail", 0
     console.log "createThumbnail", 0, filePath
@@ -22,7 +22,7 @@ createThumbnail = (filePath) ->
       "-i", filePath,
       "-ss", "00:00:01.000",
       "-vframes", "1",
-      "pipe:1"
+      thumbnailFilePath
       ]);
     console.log "createThumbnail", 1, ffmpeg
     ffmpeg.stdout.pipe(outputStream);
