@@ -27,8 +27,8 @@ createThumbnail = (filePath) ->
     console.log "createThumbnail", 1, ffmpeg
     ffmpeg.stdout.pipe(outputStream);
     
-    ffmpeg.stderr.on "data", () ->
-      console.log "createThumbnail", 4, "data"
+    # ffmpeg.stderr.on "data", () ->
+    #   console.log "createThumbnail", 4, "data"
     ffmpeg.stderr.on "exit", () ->
       console.log "createThumbnail", 6, "exit"
     ffmpeg.stderr.on "close", () ->
@@ -74,24 +74,29 @@ exports.create = (req, res) ->
     vid: ""
     tid: ""
   
+  console.log "create then", 0
   # 動画ファイルをmongoにinsert
   insertFile filePath
   .then (result) ->
+    console.log "create then", 1, result
     data.vid = result
     createThumbnail filePath
     
   # サムネイル画像を生成
   .then (result) ->
+    console.log "create then", 2, result
     thumbnailFilePath = result
     insertFile thumbnailFilePath
   
   # サムネイルをmongoにinsert
   .then (result) ->
+    console.log "create then", 3, result
     data.tid = result
     return
     
   # ユーザーにレスポンスを返す
   .then () ->
+    console.log "create then", 4, result
     res.status 200
       .send data
     fs.unlink filePath
@@ -100,6 +105,7 @@ exports.create = (req, res) ->
     
   # エラーレスポンス
   .catch (err) ->
+    console.log "create catch", 3, err
     res.status 500
       .send err
     return
