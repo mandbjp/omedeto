@@ -63,5 +63,5 @@ block script
 
     .detail(v-show="video._id", @click="closeVideo")
       .video-modal
-        video(:src="video.videoPath", :poster="video.imagePath", autoplay, preload="metadata", controls)
+        video(type="video/mp4", :src="video.videoPath", :poster="video.imagePath", autoplay, preload="metadata", controls)
         
