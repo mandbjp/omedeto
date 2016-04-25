@@ -115,15 +115,26 @@ $ ->
         @getVideo id
         .then (result) =>
           if result.vid
-            result.videoPath = "/files/#{result.vid}"
+            vid = result.vid
+            query =
+              type: "video"
+            files
+            .show vid, query
+            .then (videoData) =>
+              # base64で表示
+              result.videoPath = "data:video/mp4;base64,#{videoData}"
 
-          if result.tid
-            result.imagePath = "/files/#{result.tid}/300x300"
-          else
-            result.imagePath = "/images/noimage.png"
+              if result.tid
+                result.imagePath = "/files/#{result.tid}/300x300"
+              else
+                result.imagePath = "/images/noimage.png"
 
-          @video = result
-          @countView result
+              @video = result
+              @countView result
+              return
+            .catch (err) ->
+              console.log err
+              return
           return
         .catch (err) ->
           console.log err

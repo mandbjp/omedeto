@@ -82,13 +82,20 @@ exports.create = (req, res) ->
 # ファイル取得
 exports.show = (req, res) ->
   _id = req.params.id
+  query = req.query
+  type = query.type
 
   mongo.findGridFS config.mongo.filedb, _id, {}
   .then (result) ->
     if result
       data = result.data
-    res.status 200
-      .send data
+      if type is "video"
+        data = new Buffer(data).toString('base64')
+        res.set
+          "Content-Type": "video/mp4"
+          "Accept-Ranges": "bytes"
+      res.status 200
+        .send data
     return
   .catch (err) ->
     res.status 500
