@@ -40,18 +40,18 @@ app.use multipart
   limit: "1000mb"
 
 # Basic認証
-app.use basicAuth (user, pass) ->
-  admin = config.auth.admin
-  general = config.auth.general
-
-  # 管理権限
-  if user is admin.user and pass is admin.password
-    return true
-  # 一般権限
-  else if user is general.user and pass is general.password
-    return true
-  else
-    return false
+#app.use basicAuth (user, pass) ->
+#  admin = config.auth.admin
+#  general = config.auth.general
+#
+#  # 管理権限
+#  if user is admin.user and pass is admin.password
+#    return true
+#  # 一般権限
+#  else if user is general.user and pass is general.password
+#    return true
+#  else
+#    return false
 
 # ファイル取得
 file = require "./routes/files"
