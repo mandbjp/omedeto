@@ -22,6 +22,7 @@ $ ->
         limit: ""
       count: ""
       sortMode: false
+      videoLoading: false
     created: () ->
       @query.sid = "omedeto"
       @reloadList()
@@ -112,6 +113,10 @@ $ ->
 
       # サムネイルをクリック
       showVideo: (id) ->
+        if @videoLoading
+          alert "別の動画を現在読込中です。表示されるまでお待ち下さい。"
+          return
+        @videoLoading = true
         @getVideo id
         .then (result) =>
           if result.vid
@@ -131,13 +136,16 @@ $ ->
 
               @video = result
               @countView result
+              @videoLoading = false
               return
             .catch (err) ->
               console.log err
+              @videoLoading = false
               return
           return
         .catch (err) ->
           console.log err
+          @videoLoading = false
           return
         return
 

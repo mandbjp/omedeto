@@ -14,7 +14,7 @@ createThumbnail = (filePath) ->
     thumbnailFilePath = filePath + ".thunmbnail.jpg"
     ffmpeg = child_process.spawn("ffmpeg", [
       "-i", filePath,
-      "-ss", "00:00:01.000",
+      "-ss", "00:00:00.500",
       "-f", "mjpeg"
       "-vframes", "1",
       thumbnailFilePath
@@ -25,7 +25,6 @@ createThumbnail = (filePath) ->
       # @see http://stackoverflow.com/questions/17699599/node-js-check-exist-file
       fs.stat thumbnailFilePath, (err, stat) ->
         if (err == null)
-          # console.log('File exists');
           resolve thumbnailFilePath
         else if err.code == 'ENOENT'
           reject "thumbnail creation failed. (ENOENT)"
