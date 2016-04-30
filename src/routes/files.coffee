@@ -88,16 +88,23 @@ exports.show = (req, res) ->
   _id = req.params.id
   query = req.query
   type = query.type
+  opt =
+    verbose: true
 
-  mongo.findGridFS config.mongo.filedb, _id, {}
+  mongo.findGridFS config.mongo.filedb, _id, opt
   .then (result) ->
     if result
+      option = result.option
+      contentType = option.contentType
+      length = option.length
       data = result.data
       if type is "video"
         data = new Buffer(data).toString('base64')
+        contentType = contentType ? "video/mp4"
         res.set
-          "Content-Type": "video/mp4"
+          "Content-Type": "#{contentType}; charset=utf-8"
           "Accept-Ranges": "bytes"
+          "Content-Length": length
       res.status 200
         .send data
     return
