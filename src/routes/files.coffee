@@ -5,9 +5,12 @@ config = require("./../config").config
 child_process = require "child_process"
 
 
-insertFile = (filePath) ->
+insertFile = (filePath, fileType) ->
   stream = fs.createReadStream filePath
-  mongo.insertGridFS config.mongo.filedb, stream, {}
+  opt =
+    contentType: fileType
+  mongo.insertGridFS config.mongo.filedb, stream, opt
+
 
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
@@ -38,13 +41,14 @@ createThumbnail = (filePath) ->
 exports.create = (req, res) ->
   file = req.files.file
   filePath = file.path
+  fileType = file.type
   thumbnailFilePath = ""
   data =
     vid: ""
     tid: ""
   
   # 動画ファイルをmongoにinsert
-  insertFile filePath
+  insertFile filePath, fileType
   .then (result) ->
     console.log "[files.create][1/3] video inserted.", result
     data.vid = result
@@ -54,7 +58,8 @@ exports.create = (req, res) ->
   .then (result) ->
     console.log "[files.create][2/3] thumbnail created.", result
     thumbnailFilePath = result
-    insertFile thumbnailFilePath
+    thumbnailFileType = "image/jpeg"
+    insertFile thumbnailFilePath, thumbnailFileType
   
   # サムネイルをmongoにinsert
   .then (result) ->
