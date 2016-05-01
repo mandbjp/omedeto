@@ -32,6 +32,9 @@ $ ->
           else
             imagePath = "/images/noimage.png"
 
+          if val.vid_low
+            val.vid = val.vid_low  # 低画質動画でvidを上書き
+
           if val.vid
             videoPath = "/files/#{val.vid}"
  
