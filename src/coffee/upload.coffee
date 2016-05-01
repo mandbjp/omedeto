@@ -61,6 +61,7 @@ $ ->
             if result.status is 200
               @vid = result.data.vid
               @tid = result.data.tid
+              @vid_low = result.data.vid_low
               if @vid
                 @viewShowVideoUploading = false
                 @viewSendBtnDissabled = false
@@ -83,6 +84,7 @@ $ ->
           param =
             vid: @vid
             tid: @tid
+            vid_low: @vid_low
             nickname: @nickname
 
           videos
