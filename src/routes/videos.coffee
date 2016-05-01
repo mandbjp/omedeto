@@ -67,6 +67,7 @@ insertData = (data) ->
     sid = data.sid
     vid = data.vid
     tid = data.tid
+    vid_low = data.vid_low
     nickname = data.nickname
     order = data.order
 
@@ -76,6 +77,9 @@ insertData = (data) ->
 
     if tid
       doc.tid = tid
+
+    if vid_low
+      doc.vid_low = vid_low
 
     if nickname
       doc.nickname = nickname
@@ -107,6 +111,7 @@ updateData = (data) ->
     sid = data.sid
     vid = data.vid
     tid = data.tid
+    vid_low = data.vid_low
     nickname = data.nickname
     order = data.order
     view = data.view
@@ -123,6 +128,9 @@ updateData = (data) ->
 
     if tid
       doc.$set.tid = tid
+
+    if vid_low
+      doc.$set.vid_low = vid_low
 
     if nickname
       doc.$set.nickname = nickname
