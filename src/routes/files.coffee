@@ -142,7 +142,7 @@ exports.show = (req, res) ->
       length = option.length
       data = result.data
       if type is "video"
-        # data = new Buffer(data).toString('base64')
+        data = new Buffer(data).toString('base64')
         contentType = contentType ? "video/mp4"
         res.set
           "Content-Type": "#{contentType}; charset=utf-8"
