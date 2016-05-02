@@ -123,14 +123,6 @@
             font-size 23px
             margin-right 3px
 
-    .thumbnail:hover
-      .showVideo
-        display block
-        z-index 5
-
-    .thumnail:active
-      border 1px solid #4374D9
-
     .loadmore
       text-align center
       height 100px
@@ -168,3 +160,12 @@
       video
         height 100%
         max-width 100%
+
+
+  // Wider than extra small devices
+  @media screen and (min-width sm-min)
+    .list
+      .thumbnail:hover
+        .showVideo
+          display block
+          z-index 5

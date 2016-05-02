@@ -121,7 +121,7 @@ $ ->
         @getVideo id
         .then (result) =>
           if result.vid
-            vid = if result.vid_low then result.vid_low else result.vid  
+            vid = if result.vid_low then result.vid_low else result.vid
             query =
               type: "video"
             #@.$http.get "/files/#{vid}", query,
@@ -170,6 +170,8 @@ $ ->
                 val.checked = false
               else
                 val.checked = true
+        else
+          @showVideo id
         return
 
       # 選択動画を一つ前に移動
