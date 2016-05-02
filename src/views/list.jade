@@ -56,6 +56,14 @@ block script
               span.glyphicon.glyphicon-zoom-in
               span="動画を見る"
 
+          .loadingBar(v-show="video.loading")
+            .spinner
+              .rect1
+              .rect2
+              .rect3
+              .rect4
+              .rect5
+
       .loadmore.col-xs-12(:class="{loading: loading}")
         .load-status(v-text="query.skip + ' / ' + count")
         img(src="/images/loading.svg", alt="Loading icon")

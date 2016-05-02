@@ -23,7 +23,6 @@ $ ->
         limit: ""
       count: ""
       sortMode: false
-      videoLoading: false
     created: () ->
       @query.sid = "omedeto"
       @reloadList()
@@ -42,6 +41,7 @@ $ ->
             unless val.nickname
               val.nickname = "ニックネーム未登録"
             val.checked = false
+            val.loading = false
             @videos.push val
           return
         .catch (err) ->
@@ -112,12 +112,27 @@ $ ->
 
         return
 
+      # Video loading
+      loading: (id) ->
+        for val in @videos
+          if id is val._id
+            val.loading = true
+        return
+
+      # Video loaded
+      loaded: (id) ->
+        for val in @videos
+          if id is val._id
+            val.loading = false
+        return
+ 
       # サムネイルをクリック
       showVideo: (id) ->
-        if @videoLoading
-          alert "別の動画を現在読込中です。表示されるまでお待ち下さい。"
-          return
-        @videoLoading = true
+        for val in @videos
+          if val.loading
+            alert "別の動画を現在読込中です。表示されるまでお待ち下さい。"
+            return
+        @loading id
         @getVideo id
         .then (result) =>
           if result.vid
@@ -142,16 +157,16 @@ $ ->
 
               @video = result
               @countView result
-              @videoLoading = false
+              @loaded id
               return
             .catch (err) ->
               console.log err
-              @videoLoading = false
+              @loaded id
               return
           return
         .catch (err) ->
           console.log err
-          @videoLoading = false
+          @loaded id
           return
         return
 
