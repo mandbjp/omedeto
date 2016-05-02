@@ -19,25 +19,39 @@ block script
             button.searchBtn.btn.btn-primary(type="button", @click="reloadList")
               span.glyphicon.glyphicon-search
       - if(admin)
-        .orderby.col-xs-12.col-sm-6.col-md-6.col-lg-8
-          button.btn.btn-default(type="button", @click="sortMode = true", v-show="!sortMode")
-            span.icon.glyphicon.glyphicon-sort
-            span.text="表示順変更"
-          .controller(v-show="sortMode")
-            button.btn.btn-default(type="button", @click="movePrev")
-              span.glyphicon.glyphicon-chevron-left
-            button.btn.btn-default(type="button", @click="moveNext")
-              span.glyphicon.glyphicon-chevron-right
-            button.btn.btn-default(type="button", @click="sortCancel")
-              span.icon.glyphicon.glyphicon-repeat
-              span.text="取消"
-            button.btn.btn-primary(type="button", @click="sortSave")
-              span.icon.glyphicon.glyphicon-floppy-disk
-              span.text="保存"
+        .col-xs-12.col-sm-6.col-md-6.col-lg-8
+          .delete
+            button.btn.btn-danger(type="button", @click="deleteMode = true", v-show="!deleteMode && !sortMode")
+              span.icon.glyphicon.glyphicon-trash
+              span.text="削除"
+            .controller(v-show="deleteMode")
+              button.btn.btn-default(type="button", @click="deleteCancel")
+                span.icon.glyphicon.glyphicon-repeat
+                span.text="取消"
+              button.complete.btn.btn-danger(type="button", @click="delete")
+                span.icon.glyphicon.glyphicon-trash
+                span.text="選択動画削除"
+
+          .orderby
+            button.btn.btn-default(type="button", @click="sortMode = true", v-show="!sortMode && !deleteMode")
+              span.icon.glyphicon.glyphicon-sort
+              span.text="表示順変更"
+            .controller(v-show="sortMode")
+              button.btn.btn-default(type="button", @click="movePrev")
+                span.glyphicon.glyphicon-chevron-left
+              button.btn.btn-default(type="button", @click="moveNext")
+                span.glyphicon.glyphicon-chevron-right
+              button.btn.btn-default(type="button", @click="sortCancel")
+                span.icon.glyphicon.glyphicon-repeat
+                span.text="取消"
+              button.complete.btn.btn-primary(type="button", @click="sortSave")
+                span.icon.glyphicon.glyphicon-floppy-disk
+                span.text="保存"
+
     .list
       .item.col-xs-12.col-sm-4.col-md-3.col-lg-2(v-for="video in videos")
         .thumbnail(@click="selectItem(video._id)")
-          input.checkbox(v-show="sortMode", type="checkbox", v-model="video.checked")
+          input.checkbox(v-show="sortMode || deleteMode", type="checkbox", v-model="video.checked")
           .imageLayout
             img.img-thumbnail(:src="video.imagePath")
           .caption

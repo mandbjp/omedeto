@@ -15,6 +15,8 @@ getData = (query) ->
 
     crt =
       sid: "omedeto"
+      disable:
+        $exists: false
 
     if _id
       crt._id = new ObjectID _id
@@ -154,6 +156,36 @@ updateData = (data) ->
       return
     return
 
+removeData = (data) ->
+  return Promise (resolve, reject) ->
+    _id = data._id
+    sid = data.sid
+    disable = data.disable
+
+    crt =
+      sid: sid
+      _id: new ObjectID _id
+
+    doc =
+      $set: {}
+
+    if disable
+      doc.$set.disable = true
+
+    doc.$set.uptdt = new Date()
+
+    opt = {}
+    mongo.update config.mongo.db, config.mongo.collection.video, crt, doc, opt
+    .then (result) ->
+      if result
+        result._id = doc._id
+      resolve result
+      return
+    .catch (err) ->
+      reject err
+      return
+    return
+
 
 # 動画一覧取得 (GET)
 exports.index = (req, res) ->
@@ -236,4 +268,22 @@ exports.update = (req, res) ->
       .send err.msg
     return
 
+  return
+
+# 動画削除 (DELETE)
+exports.destroy = (req, res) ->
+  param = req.body
+  param._id = req.params.id
+  param.sid = "omedeto"
+
+  removeData param
+  .then (result) ->
+    status = if result.ok >= 0 then 200 else 400
+    res.status status
+      .send result
+    return
+  .catch (err) ->
+    res.status err.code
+      .send err.msg
+    return
   return

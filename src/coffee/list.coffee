@@ -23,6 +23,7 @@ $ ->
         limit: ""
       count: 0
       sortMode: false
+      deleteMode: false
     created: () ->
       @query.sid = "omedeto"
       @reloadList()
@@ -53,6 +54,7 @@ $ ->
       reloadList: () ->
         @videos = []
         @sortMode = false
+        @deleteMode = false
         @query.skip = 0
         @query.limit = ""
         @query.type = "count"
@@ -173,7 +175,7 @@ $ ->
 
       # 一覧選択
       selectItem: (id) ->
-        if @sortMode
+        if @sortMode or @deleteMode
           for val in @videos
             if val._id is id
               if val.checked
@@ -235,5 +237,41 @@ $ ->
           .catch (err) ->
             console.log err
             return
+        return
+
+      # 取消ボタンクリック
+      deleteCancel: () ->
+        @deleteMode = false
+        @reloadList()
+        return
+
+      # 削除ボタンクリック
+      delete: () ->
+        if confirm "選択した動画を削除しますか？"
+          success = 0
+          failure = 0
+          @videos.reduce (promise, data, index) =>
+            return promise.then () =>
+              if data.checked
+                param =
+                  disable: true
+                return videos.destroy data._id, param
+                .then (result) =>
+                  console.log result
+                  if result.n
+                    success++
+                  return
+                .catch (err) ->
+                  console.log err
+                  return
+              return
+          , Promise.resolve()
+            .then () =>
+              alert "#{success}件の動画を削除しました。"
+              @reloadList()
+              return
+            .catch (err) ->
+              console.log err
+              return
         return
   return
