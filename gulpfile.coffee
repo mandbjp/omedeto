@@ -86,6 +86,11 @@ gulp.task "images", () ->
   return gulp.src "./src/images/*"
     .pipe gulp.dest "./dist/images/"
 
+# manual
+gulp.task "manual", () ->
+  return gulp.src "./src/manual/*"
+    .pipe gulp.dest "./dist/manual/"
+
 gulp.task "watch", () ->
   gulp.watch "./src/*.coffee", ["app"]
   gulp.watch [
@@ -103,6 +108,9 @@ gulp.task "watch", () ->
   gulp.watch [
     "./src/images/*"
   ], ["images"]
+  gulp.watch [
+    "./src/manual/*"
+  ], ["manual"]
   return
 
 gulp.task "nodemon", () ->
@@ -130,6 +138,7 @@ gulp.task "build", (done) ->
       "vendor-css"
       "fonts"
       "images"
+      "manual"
     ]
 
 # preview
@@ -144,5 +153,6 @@ gulp.task "default", ["watch"], (done) ->
       "vendor-css"
       "fonts"
       "images"
+      "manual"
     ],
     "nodemon"
