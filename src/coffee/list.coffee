@@ -21,7 +21,7 @@ $ ->
         search: ""
         skip: 0
         limit: ""
-      count: ""
+      count: 0
       sortMode: false
     created: () ->
       @query.sid = "omedeto"
@@ -139,15 +139,10 @@ $ ->
             vid = if result.vid_low then result.vid_low else result.vid
             query =
               type: "video"
-            #@.$http.get "/files/#{vid}", query,
-            #  headers:
-            #    Range: "bytes=0-2000"
-            #.then (videoData) =>
             files
             .show vid, query
             .then (videoData) =>
               # base64で表示
-              #console.log videoData.data.length
               result.videoPath = "data:video/mp4;base64,#{videoData}"
 
               if result.tid
