@@ -123,13 +123,45 @@
             font-size 23px
             margin-right 3px
 
-    .thumbnail:hover
-      .showVideo
-        display block
-        z-index 5
+      .loadingBar
+        position absolute
+        width 100%
+        top 50%
+        left 0
+        transform translateY(-50%)
+        z-index 10
+      
+        .spinner
+          position relative
+          width 100px
+          height 30px
+          text-align center
+          font-size 20px
+          margin-left auto
+          margin-right auto
+          z-index 20
+      
+          > div
+            background-color #eee
+            height 100%
+            width 5px
+            display inline-block
+            -webkit-animation stretchdelay 1.2s infinite ease-in-out
+            animation stretchdelay 1.2s infinite ease-in-out
+      
+          .rect2
+            -webkit-animation-delay -1.1s
+            animation-delay -1.1s
+          .rect3
+            -webkit-animation-delay -1.0s
+            animation-delay -1.0s
+          .rect4
+            -webkit-animation-delay -0.9s
+            animation-delay -0.9s
+          .rect5
+            -webkit-animation-delay -0.8s
+            animation-delay -0.8s
 
-    .thumnail:active
-      border 1px solid #4374D9
 
     .loadmore
       text-align center
@@ -157,7 +189,6 @@
     width 100%
     height 100%
     z-index 20
-    background-color rgba(0,0,0,.4)
 
     .video-modal
       width 100%
@@ -168,3 +199,27 @@
       video
         height 100%
         max-width 100%
+
+
+  // Wider than extra small devices
+  @media screen and (min-width sm-min)
+    .list
+      .thumbnail:hover
+        .showVideo
+          display block
+          z-index 5
+
+
+@-webkit-keyframes stretchdelay
+  0%, 40%, 100%
+    -webkit-transform scaleY(0.4)
+  20%
+    -webkit-transform scaleY(1.0)
+
+@keyframes stretchdelay
+  0%, 40%, 100%
+    transform scaleY(0.4)
+    -webkit-transform scaleY(0.4)
+  20%
+    transform scaleY(1.0)
+    -webkit-transform scaleY(1.0)

@@ -21,9 +21,8 @@ $ ->
         search: ""
         skip: 0
         limit: ""
-      count: ""
+      count: 0
       sortMode: false
-      videoLoading: false
     created: () ->
       @query.sid = "omedeto"
       @reloadList()
@@ -42,6 +41,7 @@ $ ->
             unless val.nickname
               val.nickname = "ニックネーム未登録"
             val.checked = false
+            val.loading = false
             @videos.push val
           return
         .catch (err) ->
@@ -112,27 +112,37 @@ $ ->
 
         return
 
+      # Video loading
+      loading: (id) ->
+        for val in @videos
+          if id is val._id
+            val.loading = true
+        return
+
+      # Video loaded
+      loaded: (id) ->
+        for val in @videos
+          if id is val._id
+            val.loading = false
+        return
+ 
       # サムネイルをクリック
       showVideo: (id) ->
-        if @videoLoading
-          alert "別の動画を現在読込中です。表示されるまでお待ち下さい。"
-          return
-        @videoLoading = true
+        for val in @videos
+          if val.loading
+            alert "別の動画を現在読込中です。表示されるまでお待ち下さい。"
+            return
+        @loading id
         @getVideo id
         .then (result) =>
           if result.vid
-            vid = if result.vid_low then result.vid_low else result.vid  
+            vid = if result.vid_low then result.vid_low else result.vid
             query =
               type: "video"
-            #@.$http.get "/files/#{vid}", query,
-            #  headers:
-            #    Range: "bytes=0-2000"
-            #.then (videoData) =>
             files
             .show vid, query
             .then (videoData) =>
               # base64で表示
-              #console.log videoData.data.length
               result.videoPath = "data:video/mp4;base64,#{videoData}"
 
               if result.tid
@@ -142,16 +152,16 @@ $ ->
 
               @video = result
               @countView result
-              @videoLoading = false
+              @loaded id
               return
             .catch (err) ->
               console.log err
-              @videoLoading = false
+              @loaded id
               return
           return
         .catch (err) ->
           console.log err
-          @videoLoading = false
+          @loaded id
           return
         return
 
@@ -170,6 +180,8 @@ $ ->
                 val.checked = false
               else
                 val.checked = true
+        else
+          @showVideo id
         return
 
       # 選択動画を一つ前に移動
