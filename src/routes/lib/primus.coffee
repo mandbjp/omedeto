@@ -24,6 +24,9 @@ exports.init = (server) ->
 
     return
 
+  #primus.on "disconnection", (spark) ->
+  #  return
+
 # Websocketメッセージ
 exports.sendVideo = (data) ->
   if data.ok

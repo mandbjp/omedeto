@@ -142,5 +142,9 @@ $ ->
               return
             , 10
           return
+        # 再接続
+        primus.on "reconnected", () ->
+          primus.send "join", room
+          return
         return
   return
