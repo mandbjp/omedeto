@@ -3,6 +3,7 @@ Promise = require("q").promise
 fs = require "fs"
 config = require("./../config").config
 child_process = require "child_process"
+ffprobe = require "node-ffprobe"
 
 
 insertFile = (filePath, fileType) ->
@@ -37,14 +38,48 @@ createThumbnail = (filePath) ->
     ffmpeg.stderr.on "error", () ->
       reject "error on spawning ffmpeg"
 
-# 動画を圧縮
-compressVideo = (filePath) ->
+# 動画情報を取得
+collectVideoInfo = (filePath) ->
   return Promise (resolve, reject) ->
+    ffprobe filePath, (err, probeData) ->
+      if err
+        reject "node-ffprobe failed. reason: " + err
+        
+      # find video stream from response and resolve information
+      for stream in probeData.streams
+        if stream.codec_type isnt "video"
+          continue
+        response = 
+          file: probeData.file
+          width: stream.width
+          height: stream.height  
+          codec_name: stream.codec_name  # video codec name. eg. h264
+          duration: stream.duration  # video length in second
+          framerate: eval(stream.r_frame_rate)  # calculate equation with eval
+        resolve response
+        return
+      
+      # there is no video stream.
+      reject "node-ffprobe failed. there is no video stream in file."
+      
+    return 
+
+# 動画を圧縮
+compressVideo = (filePath, videoInfo) ->
+  return Promise (resolve, reject) ->
+    # 圧縮後の解像度をターゲット幅から算出する(高さは4の倍数に丸める)
+    width = config.video_compression.target_width
+    height = multiplesOf(videoInfo.height / (videoInfo.width / config.video_compression.target_width), 4)
+    resolution = "#{width}x#{height}"
+    console.log "output resolution", resolution
+    
     outputFile = filePath + ".compressed.mp4"  # output format is 'mp4'
     # command line @see http://tech.ckme.co.jp/ffmpeg.shtml
     ffmpeg = child_process.spawn("ffmpeg", [
       "-i", filePath,
-      "-vf", "scale=640:-1",  # resize video to 640:x 
+      "-b", "#{config.video_compression.bitrate}",  # bitrate as kb/s
+      "-r", "#{videoInfo.framerate}",  # framerate to ...
+      "-s", resolution,  # resolution to ...
       outputFile
       ])
     
@@ -64,6 +99,11 @@ compressVideo = (filePath) ->
     ffmpeg.stderr.on "error", () ->
       reject "error on spawning ffmpeg for compressVideo"
 
+# 特定の倍数に丸める
+multiplesOf = (src, unit) ->
+  # @see http://ginpen.com/2011/12/09/floor-to-any/
+  return Math.round(src / unit) * unit 
+
 # ファイル格納
 exports.create = (req, res) ->
   file = req.files.file
@@ -79,33 +119,38 @@ exports.create = (req, res) ->
   # 動画ファイルをmongoにinsert
   insertFile filePath, fileType
   .then (result) ->
-    console.log "[files.create][1/5] video inserted.", result
+    console.log "[files.create][1/6] video inserted.", result
     data.vid = result
-    compressVideo filePath
+    collectVideoInfo filePath
+    
+  # 動画情報取得
+  .then (result) ->
+    console.log "[files.create][2/6] collectVideoInfo", "#{result.codec_name} #{result.width}x#{result.height}"
+    compressVideo filePath, result
     
   # 動画圧縮
   .then (result) ->
-    console.log "[files.create][2/5] compressVideo created.", result
+    console.log "[files.create][3/6] compressVideo created.", result
     compressVideoPath = result
     compressVideoType = "video/mp4"
     insertFile compressVideoPath, compressVideoType
   
   # 圧縮した動画をmongoにinsert
   .then (result) ->
-    console.log "[files.create][3/5] compressVideo inserted."
+    console.log "[files.create][4/6] compressVideo inserted."
     data.vid_low = result
     createThumbnail filePath
     
   # サムネイル画像を生成
   .then (result) ->
-    console.log "[files.create][4/5] thumbnail created.", result
+    console.log "[files.create][5/6] thumbnail created.", result
     thumbnailFilePath = result
     thumbnailFileType = "image/jpeg"
     insertFile thumbnailFilePath, thumbnailFileType
   
   # サムネイルをmongoにinsert
   .then (result) ->
-    console.log "[files.create][5/5] thumbnail inserted."
+    console.log "[files.create][6/6] thumbnail inserted."
     data.tid = result
     return
     
