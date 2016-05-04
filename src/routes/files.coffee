@@ -56,7 +56,7 @@ collectVideoInfo = (filePath) ->
           height: stream.height  
           codec_name: stream.codec_name  # video codec name. eg. h264
           duration: stream.duration  # video length in second
-          framerate: eval(stream.r_frame_rate)  # calculate equation with eval
+          framerate: eval(stream.avg_frame_rate)  # calculate equation with eval
         resolve response
         return
       
