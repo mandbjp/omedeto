@@ -16,7 +16,6 @@ exports.init = (server) ->
 
   # Connect
   primus.on "connection", (spark) ->
-    console.log "connect"
     spark.on "join", (data) ->
       sid = data.sid
       room = sid
@@ -25,9 +24,8 @@ exports.init = (server) ->
 
     return
 
-  primus.on "disconnection", (spark) ->
-    console.log "disconnect"
-    return
+  #primus.on "disconnection", (spark) ->
+  #  return
 
 # Websocketメッセージ
 exports.sendVideo = (data) ->

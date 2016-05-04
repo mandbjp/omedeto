@@ -144,7 +144,6 @@ $ ->
           return
         # 再接続
         primus.on "reconnected", () ->
-          console.log room
           primus.send "join", room
           return
         return
