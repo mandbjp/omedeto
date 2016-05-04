@@ -50,13 +50,14 @@ collectVideoInfo = (filePath) ->
       for stream in probeData.streams
         if stream.codec_type isnt "video"
           continue
+        calcFramerate = Math.round(eval(stream.avg_frame_rate) * 100) / 100  # calculate equation with eval. eg. 29.95
         response = 
           file: probeData.file
           width: stream.width
           height: stream.height  
           codec_name: stream.codec_name  # video codec name. eg. h264
           duration: stream.duration  # video length in second
-          framerate: eval(stream.avg_frame_rate)  # calculate equation with eval
+          framerate: calcFramerate
         resolve response
         return
       
