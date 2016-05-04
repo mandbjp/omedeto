@@ -19,6 +19,11 @@ $ ->
       text: ""
       stamps: ["stamp001.png","stamp002.png"]
       comments: []
+      lastLoadedId: ""
+      preLastLoadedId: ""
+      pos: 0
+      prePos: 0
+      posCount: 1
       query:
         skip: 0
         limit: 20
@@ -42,21 +47,28 @@ $ ->
           @getComments @query
           .then (results) =>
             @query.skip += results.length
+            @preLastLoadedId = @lastLoadedId
             for val in results
               if val.sntdt
                 val.sntdt = moment(new Date(val.sntdt)).format "MM/DD HH:mm"
               @comments.unshift val
+              @lastLoadedId = val._id
             resolve()
+            if @preLastLoadedId is ""
+              @preLastLoadedId = val._id
+            #console.log @preLastLoadedId
+            #console.log @lastLoadedId
             return
           .catch (err) ->
             console.log err
             resolve()
             return
           return
-
       # Reload
       reloadList: () ->
         @comments = []
+        @lastLoadedId = ""
+        @preLastLoadedId = ""
         @loadMore()
         .then () ->
           setTimeout () ->
@@ -73,9 +85,28 @@ $ ->
           #console.log clientHeight
           #console.log scrollHeight
           #console.log maxScroll
-          console.log scrollTop
+          #console.log scrollTop
+          
+          #console.log "top:#{scrollTop}"
+          #console.log $(".item")
+
           if scrollTop is 0
             @loadMore()
+            console.log @posCount
+            console.log $(".commentList").height()
+            @pos = $("#" + @preLastLoadedId).offset().top
+            if @pos is @prePos
+              @posCount += 1
+            if @posCount isnt 1
+              @pos *= @posCount
+              @posCount += 0.8
+            console.log @prePos
+            console.log @pos
+            @prePos = @pos
+            #console.log $("#" + @preLastLoadedId)
+            calPos = $(".commentList").height() - @pos
+            console.log calPos
+            $("#history").animate({ scrollTop: calPos }, 'fast')
           return
         return
 

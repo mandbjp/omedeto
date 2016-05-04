@@ -19,7 +19,7 @@ block script
             #history
               .commentList
                 .item(v-for="comment in comments")
-                  span.nickname(v-text="comment.nickname + ': '")
+                  span.nickname(id="{{comment._id}}" v-text="comment.nickname + ': '")
                   span.commentContents
                     span.text(v-show="comment.text", v-text="comment.text")
                     template(v-if="comment.stamp")
