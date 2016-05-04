@@ -33,5 +33,6 @@
   text-align: center;
 }
 
-.omedeto-video-shoot:before { content: "\F000" }
-.omedeto-wedding:before { content: "\F001" }
+.omedeto-stamp:before { content: "\F000" }
+.omedeto-video-shoot:before { content: "\F001" }
+.omedeto-wedding:before { content: "\F002" }

@@ -29,7 +29,7 @@ block script
             .input-group
               span.input-group-btn
                 button.stamp.btn.btn-default(type="button", @click="toggleStamp")
-                  span.text="Stamp"
+                  span.icon.omedeto.omedeto-stamp
               input.form-control(type="text", v-model="text", placeholder="メッセージを入力", @keyup.enter="sendText")
               span.input-group-btn
                 button.send.btn.btn-success(type="button", @click="sendText")
