@@ -16,12 +16,17 @@ exports.init = (server) ->
 
   # Connect
   primus.on "connection", (spark) ->
+    console.log "connect"
     spark.on "join", (data) ->
       sid = data.sid
       room = sid
       spark.join room
       return
 
+    return
+
+  primus.on "disconnection", (spark) ->
+    console.log "disconnect"
     return
 
 # Websocketメッセージ
