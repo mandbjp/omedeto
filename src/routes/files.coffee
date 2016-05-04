@@ -71,17 +71,18 @@ compressVideo = (filePath, videoInfo) ->
     width = config.video_compression.target_width
     height = multiplesOf(videoInfo.height / (videoInfo.width / config.video_compression.target_width), 4)
     resolution = "#{width}x#{height}"
-    console.log "output resolution", resolution
     
     outputFile = filePath + ".compressed.mp4"  # output format is 'mp4'
     # command line @see http://tech.ckme.co.jp/ffmpeg.shtml
-    ffmpeg = child_process.spawn("ffmpeg", [
+    ffmpegOptions = [
       "-i", filePath,
       "-b", "#{config.video_compression.bitrate}",  # bitrate as kb/s
       "-r", "#{videoInfo.framerate}",  # framerate to ...
       "-s", resolution,  # resolution to ...
       outputFile
-      ])
+      ]
+    console.log "--- ffmpegOptions\n", JSON.stringify(ffmpegOptions)
+    ffmpeg = child_process.spawn("ffmpeg", ffmpegOptions)
     
     ffmpeg.stdout.on "close", () ->
       # when ffmpeg is done
