@@ -19,3 +19,6 @@ exports.config =
     general:
       user: "user"
       password: "password"
+  video_compression:
+    bitrate: 800000  # kb/s
+    target_width: 640  # 
