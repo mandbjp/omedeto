@@ -202,8 +202,7 @@ parseAvprobe = (probe) ->
       continue
     # m = ['format.tags', 'tags']
     for k of blocks[key]
-      kk = if key.indexOf(".tags") isnt -1 then "TAG:" + k 
-                                           else k
+      kk = if key.indexOf(".tags") isnt -1 then "TAG:" + k else k
       format[kk] = blocks[key][k]
 
   streams = []
@@ -218,9 +217,9 @@ parseAvprobe = (probe) ->
       streams[index] = {}
     
     for k of blocks[key]
-      kk = if key.indexOf(".tags") isnt -1 then "TAG:" + k
-           else if key.indexOf(".sidedata") isnt -1 then "SIDEDATA:" + k 
-                                           else k
+      kk = if key.indexOf(".tags") isnt -1 then "TAG:" + k else 
+        if key.indexOf(".sidedata") isnt -1 then "SIDEDATA:" + k else 
+        k
       format[kk] = blocks[key][k]
   
   reponse = 
