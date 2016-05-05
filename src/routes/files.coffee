@@ -112,8 +112,8 @@ compressVideo = (filePath, videoInfo) ->
       "-b", "#{config.video_compression.bitrate}",  # bitrate as kb/s
       "-r", "#{videoInfo.framerate}",  # framerate to ...
       "-s", resolution,  # resolution to ...
-      "-vcodec", "libx264",  # codec to h264
-      "-vpre", "medium",  # h264 quality
+      # "-vcodec", "libx264",  # codec to h264
+      # "-vpre", "medium",  # h264 quality
       "-acodec", "copy",  # keep audio as is
       outputFile
       ]
