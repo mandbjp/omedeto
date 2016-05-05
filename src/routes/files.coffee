@@ -45,7 +45,6 @@ collectVideoInfo = (filePath) ->
       if err
         reject "node-ffprobe failed. reason: " + err
         
-      console.log "probeData\n", probeData, "\n ---- "
       # find video stream from response and resolve information
       for stream in probeData.streams
         if stream.codec_type isnt "video"
@@ -74,20 +73,25 @@ compressVideo = (filePath, videoInfo) ->
     height = multiplesOf(videoInfo.height / (videoInfo.width / config.video_compression.target_width), 4)
     resolution = "#{width}x#{height}"
     
-    outputFile = filePath + ".compressed.mp4"  # output format is 'mp4'
+    outputFile = filePath + ".compressed.mp4"
     # command line @see http://tech.ckme.co.jp/ffmpeg.shtml
     ffmpegOptions = [
       "-i", filePath,
       "-b", "#{config.video_compression.bitrate}",  # bitrate as kb/s
       "-r", "#{videoInfo.framerate}",  # framerate to ...
       "-s", resolution,  # resolution to ...
-      "-vcodec", "libx264",
-      "-vpre", "medium",
-      "-acodec", "copy",
+      "-vcodec", "libx264",  # codec to h264
+      "-vpre", "medium",  # h264 quality
+      "-acodec", "copy",  # keep audio as is
       outputFile
       ]
-    console.log "--- ffmpegOptions\n", ffmpegOptions.join " "
     ffmpeg = child_process.spawn("ffmpeg", ffmpegOptions)
+    
+    rejectWithLog = (reason) ->
+      console.error "ffmpeg response:"
+      console.error stderrData
+      console.error "options: ", ffmpegOptions.join " "
+      reject reason
     
     ffmpeg.stdout.on "close", () ->
       # when ffmpeg is done
@@ -96,12 +100,16 @@ compressVideo = (filePath, videoInfo) ->
           resolve outputFile
         else if (err is null) and (stat.size is 0)
           fs.unlink outputFile
-          reject "compress video failed. (FileSize is Zero)"
+          rejectWithLog "compress video failed. (FileSize is Zero)"
         else if err.code is 'ENOENT'
-          reject "compress video failed. (ENOENT)"
+          rejectWithLog "compress video failed. (ENOENT)"
         else
           reject "compress video failed. (Unknown: #{err.code})"
       
+    stderrData = ""
+    ffmpeg.stderr.on "data", (data) ->
+      stderrData += data.toString()
+
     ffmpeg.stderr.on "error", () ->
       reject "error on spawning ffmpeg for compressVideo"
 
@@ -166,7 +174,7 @@ exports.create = (req, res) ->
       .send data
     fs.unlink filePath
     fs.unlink thumbnailFilePath
-    # fs.unlink compressVideoPath
+    fs.unlink compressVideoPath
     return
     
   # エラーレスポンス
