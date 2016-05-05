@@ -66,7 +66,7 @@ collectVideoInfo = (filePath) ->
     ffmpeg = child_process.spawn("avprobe", [filePath, "-show_streams", "-show_format", "-loglevel", "warning"])
 
     stderrData = ""
-    ffmpeg.stderr.on "data", (data) ->
+    ffmpeg.stdout.on "data", (data) ->
       stderrData += data.toString()
 
     ffmpeg.stdout.on "close", () ->
