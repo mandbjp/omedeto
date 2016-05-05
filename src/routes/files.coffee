@@ -108,24 +108,24 @@ compressVideo = (filePath, videoInfo) ->
     
     outputFile = filePath + ".compressed.mp4"
     # command line @see http://tech.ckme.co.jp/ffmpeg.shtml
-    # ffmpegOptions = [
-    #   "-i", filePath,
-    #   "-b", "#{config.video_compression.bitrate}",  # bitrate as kb/s
-    #   "-r", "#{videoInfo.framerate}",  # framerate to ...
-    #   "-s", resolution,  # resolution to ...
-    #   "-vcodec", "libx264",  # codec to h264
-    #   "-vpre", "medium",  # h264 quality
-    #   "-acodec", "copy",  # keep audio as is
-    #   outputFile
-    #   ]
     ffmpegOptions = [
       "-i", filePath,
       "-b", "#{config.video_compression.bitrate}",  # bitrate as kb/s
       "-r", "#{videoInfo.framerate}",  # framerate to ...
-      "-vf", "640:-1", 
+      "-s", resolution,  # resolution to ...
+      "-vcodec", "libx264",  # codec to h264
+      "-vpre", "medium",  # h264 quality
       "-acodec", "copy",  # keep audio as is
       outputFile
       ]
+    # ffmpegOptions = [
+    #   "-i", filePath,
+    #   "-b", "#{config.video_compression.bitrate}",  # bitrate as kb/s
+    #   "-r", "#{videoInfo.framerate}",  # framerate to ...
+    #   "-vf", "640:-1", 
+    #   "-acodec", "copy",  # keep audio as is
+    #   outputFile
+    #   ]
     ffmpeg = child_process.spawn("avconv", ffmpegOptions)
     
     rejectWithLog = (reason) ->
