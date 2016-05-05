@@ -72,7 +72,6 @@ collectVideoInfo = (filePath) ->
     ffmpeg.stdout.on "close", () ->
       # when ffmpeg is done
       probeData = parseAvprobe stdoutData
-      console.log "parsed....\n", probeData
 
       # find video stream from response and resolve information
       for stream in probeData.streams
@@ -86,7 +85,7 @@ collectVideoInfo = (filePath) ->
           codec_name: stream.codec_name  # video codec name. eg. h264
           duration: stream.duration  # video length in second
           framerate: calcFramerate
-          rotation: 0
+          rotation: if stream['SIDEDATA:rotation'] then parseInt(stream['SIDEDATA:rotation']) else 0
         resolve response
         return
       
@@ -105,6 +104,9 @@ compressVideo = (filePath, videoInfo) ->
     width = config.video_compression.target_width
     height = multiplesOf(videoInfo.height / (videoInfo.width / config.video_compression.target_width), 4)
     resolution = "#{width}x#{height}"
+    if (((Math.abs(videoInfo.rotation) / 90)) % 2) is 1
+      # 縦長の動画
+      resolution = "#{height}x#{width}"
     
     outputFile = filePath + ".compressed.mp4"
     # command line @see http://tech.ckme.co.jp/ffmpeg.shtml
