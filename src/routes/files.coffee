@@ -71,9 +71,8 @@ collectVideoInfo = (filePath) ->
 
     ffmpeg.stdout.on "close", () ->
       # when ffmpeg is done
-      console.log stdoutData
       probeData = parseAvprobe stdoutData
-      console.log "parsed....\n", probeData
+      # console.log "parsed....\n", probeData
 
       # find video stream from response and resolve information
       for stream in probeData.streams
@@ -81,7 +80,7 @@ collectVideoInfo = (filePath) ->
           continue
         calcFramerate = Math.round(eval(stream.avg_frame_rate) * 100) / 100  # calculate equation with eval. eg. 29.95
         response = 
-          file: probeData.file
+          # file: probeData.file
           width: stream.width
           height: stream.height
           codec_name: stream.codec_name  # video codec name. eg. h264
@@ -91,7 +90,7 @@ collectVideoInfo = (filePath) ->
         return
       
       # there is no video stream.
-      reject "node-ffprobe failed. there is no video stream in file."
+      reject "avprobe failed. there is no video stream in file."
 
     ffmpeg.stderr.on "error", () ->
       reject "error on spawning avprobe"
@@ -130,7 +129,7 @@ compressVideo = (filePath, videoInfo) ->
     
     rejectWithLog = (reason) ->
       console.error "ffmpeg response:"
-      console.error stderrData
+      console.error stdoutData
       console.error "options: ", ffmpegOptions.join " "
       reject reason
     
@@ -147,9 +146,9 @@ compressVideo = (filePath, videoInfo) ->
         else
           reject "compress video failed. (Unknown: #{err.code})"
       
-    stderrData = ""
-    ffmpeg.stderr.on "data", (data) ->
-      stderrData += data.toString()
+    stdoutData = ""
+    ffmpeg.stdout.on "data", (data) ->
+      stdoutData += data.toString()
 
     ffmpeg.stderr.on "error", () ->
       reject "error on spawning ffmpeg for compressVideo"
@@ -218,8 +217,7 @@ parseAvprobe = (probe) ->
     
     for k of blocks[key]
       kk = if key.indexOf(".tags") isnt -1 then "TAG:" + k else 
-        if key.indexOf(".sidedata") isnt -1 then "SIDEDATA:" + k else 
-        k
+        if key.indexOf(".sidedata") isnt -1 then "SIDEDATA:" + k else k
       streams[index][kk] = blocks[key][k]
   
   reponse = 
