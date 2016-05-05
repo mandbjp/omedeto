@@ -72,7 +72,7 @@ collectVideoInfo = (filePath) ->
     ffmpeg.stdout.on "close", () ->
       # when ffmpeg is done
       probeData = parseAvprobe stdoutData
-      # console.log "parsed....\n", probeData
+      console.log "parsed....\n", probeData
 
       # find video stream from response and resolve information
       for stream in probeData.streams
@@ -86,6 +86,7 @@ collectVideoInfo = (filePath) ->
           codec_name: stream.codec_name  # video codec name. eg. h264
           duration: stream.duration  # video length in second
           framerate: calcFramerate
+          rotation: 0
         resolve response
         return
       
@@ -117,14 +118,6 @@ compressVideo = (filePath, videoInfo) ->
       "-acodec", "copy",  # keep audio as is
       outputFile
       ]
-    # ffmpegOptions = [
-    #   "-i", filePath,
-    #   "-b", "#{config.video_compression.bitrate}",  # bitrate as kb/s
-    #   "-r", "#{videoInfo.framerate}",  # framerate to ...
-    #   "-vf", "640:-1", 
-    #   "-acodec", "copy",  # keep audio as is
-    #   outputFile
-    #   ]
     ffmpeg = child_process.spawn("avconv", ffmpegOptions)
     
     rejectWithLog = (reason) ->
