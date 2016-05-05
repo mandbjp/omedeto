@@ -3,7 +3,6 @@ Promise = require("q").promise
 fs = require "fs"
 config = require("./../config").config
 child_process = require "child_process"
-ffprobe = require "node-avprobe"
 
 
 insertFile = (filePath, fileType) ->
@@ -41,28 +40,6 @@ createThumbnail = (filePath) ->
 # 動画情報を取得
 collectVideoInfo = (filePath) ->
   return Promise (resolve, reject) ->
-    # ffprobe filePath, (err, probeData) ->
-    #   if err
-    #     reject "node-ffprobe failed. reason: " + err
-        
-    #   console.log "---avprobe\n", probeData
-    #   # find video stream from response and resolve information
-    #   for stream in probeData.streams
-    #     if stream.codec_type isnt "video"
-    #       continue
-    #     calcFramerate = Math.round(eval(stream.avg_frame_rate) * 100) / 100  # calculate equation with eval. eg. 29.95
-    #     response = 
-    #       file: probeData.file
-    #       width: stream.width
-    #       height: stream.height
-    #       codec_name: stream.codec_name  # video codec name. eg. h264
-    #       duration: stream.duration  # video length in second
-    #       framerate: calcFramerate
-    #     resolve response
-    #     return
-      
-    #   # there is no video stream.
-    #   reject "node-ffprobe failed. there is no video stream in file."
     ffmpeg = child_process.spawn("avprobe", [filePath, "-show_streams", "-show_format", "-loglevel", "warning"])
 
     stdoutData = ""
