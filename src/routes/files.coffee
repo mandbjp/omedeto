@@ -81,6 +81,9 @@ compressVideo = (filePath, videoInfo) ->
       "-b", "#{config.video_compression.bitrate}",  # bitrate as kb/s
       "-r", "#{videoInfo.framerate}",  # framerate to ...
       "-s", resolution,  # resolution to ...
+      "-vcodec", "libx264",
+      "-vpre", "medium",
+      "-acodec", "copy",
       outputFile
       ]
     console.log "--- ffmpegOptions\n", ffmpegOptions.join " "
