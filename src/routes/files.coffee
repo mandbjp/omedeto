@@ -45,6 +45,7 @@ collectVideoInfo = (filePath) ->
       if err
         reject "node-ffprobe failed. reason: " + err
         
+      console.log "---avprobe\n", probeData
       # find video stream from response and resolve information
       for stream in probeData.streams
         if stream.codec_type isnt "video"
