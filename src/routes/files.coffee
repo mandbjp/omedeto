@@ -65,14 +65,14 @@ collectVideoInfo = (filePath) ->
     #   reject "node-ffprobe failed. there is no video stream in file."
     ffmpeg = child_process.spawn("avprobe", [filePath, "-show_streams", "-show_format", "-loglevel", "warning"])
 
-    stderrData = ""
+    stdoutData = ""
     ffmpeg.stdout.on "data", (data) ->
-      stderrData += data.toString()
+      stdoutData += data.toString()
 
     ffmpeg.stdout.on "close", () ->
       # when ffmpeg is done
-      console.log stderrData
-      probeData = parseAvprobe stderrData
+      console.log stdoutData
+      probeData = parseAvprobe stdoutData
       console.log "parsed....\n", probeData
 
       # find video stream from response and resolve information
@@ -220,7 +220,7 @@ parseAvprobe = (probe) ->
       kk = if key.indexOf(".tags") isnt -1 then "TAG:" + k else 
         if key.indexOf(".sidedata") isnt -1 then "SIDEDATA:" + k else 
         k
-      format[kk] = blocks[key][k]
+      streams[index][kk] = blocks[key][k]
   
   reponse = 
     format: format
