@@ -17,7 +17,10 @@ $ ->
     data:
       nickname: ""
       text: ""
-      stamps: ["stamp001.png","stamp002.png"]
+      stamps: [
+        "stamp001.png","stamp002.png","stamp003.gif","stamp004.gif",
+        "stamp005.gif","stamp006.gif","stamp007.gif"
+      ]
       comments: []
       query:
         skip: 0
