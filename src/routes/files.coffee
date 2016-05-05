@@ -63,7 +63,7 @@ collectVideoInfo = (filePath) ->
       
     #   # there is no video stream.
     #   reject "node-ffprobe failed. there is no video stream in file."
-    ffmpeg = child_process.spawn("avprobe", ["-show_streams", "-show_format", "-loglevel", "warning"])
+    ffmpeg = child_process.spawn("avprobe", [filePath, "-show_streams", "-show_format", "-loglevel", "warning"])
 
     stderrData = ""
     ffmpeg.stderr.on "data", (data) ->
