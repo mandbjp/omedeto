@@ -3,7 +3,7 @@ Promise = require("q").promise
 fs = require "fs"
 config = require("./../config").config
 child_process = require "child_process"
-ffprobe = require "node-ffprobe"
+ffprobe = require "node-avprobe"
 
 
 insertFile = (filePath, fileType) ->
@@ -16,7 +16,7 @@ insertFile = (filePath, fileType) ->
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
     thumbnailFilePath = filePath + ".thunmbnail.jpg"
-    ffmpeg = child_process.spawn("ffmpeg", [
+    ffmpeg = child_process.spawn("avconv", [
       "-i", filePath,
       "-ss", "00:00:00.500",
       "-f", "mjpeg"
@@ -85,7 +85,7 @@ compressVideo = (filePath, videoInfo) ->
       "-acodec", "copy",  # keep audio as is
       outputFile
       ]
-    ffmpeg = child_process.spawn("ffmpeg", ffmpegOptions)
+    ffmpeg = child_process.spawn("avconv", ffmpegOptions)
     
     rejectWithLog = (reason) ->
       console.error "ffmpeg response:"
