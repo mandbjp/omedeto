@@ -83,7 +83,7 @@ compressVideo = (filePath, videoInfo) ->
       "-s", resolution,  # resolution to ...
       outputFile
       ]
-    console.log "--- ffmpegOptions\n", JSON.stringify(ffmpegOptions)
+    console.log "--- ffmpegOptions\n", ffmpegOptions.join " "
     ffmpeg = child_process.spawn("ffmpeg", ffmpegOptions)
     
     ffmpeg.stdout.on "close", () ->
@@ -163,7 +163,7 @@ exports.create = (req, res) ->
       .send data
     fs.unlink filePath
     fs.unlink thumbnailFilePath
-    fs.unlink compressVideoPath
+    # fs.unlink compressVideoPath
     return
     
   # エラーレスポンス
