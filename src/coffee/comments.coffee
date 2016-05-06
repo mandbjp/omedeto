@@ -92,21 +92,37 @@ $ ->
 
           if scrollTop is 0
             @loadMore()
-            console.log @posCount
-            console.log $(".commentList").height()
-            @pos = $("#" + @preLastLoadedId).offset().top
-            if @pos is @prePos
-              @posCount += 1
-            if @posCount isnt 1
-              @pos *= @posCount
-              @posCount += 0.8
-            console.log @prePos
-            console.log @pos
-            @prePos = @pos
-            #console.log $("#" + @preLastLoadedId)
-            calPos = $(".commentList").height() - @pos
-            console.log calPos
-            $("#history").animate({ scrollTop: calPos }, 'fast')
+            topPos = $(".commentList").scrollTop()
+            currentPos = $("#" + @preLastLoadedId).scrollTop()
+            pos = @comments.length * $(".item").height
+            
+            #各種パラメータ確認
+            console.log "#{topPos}"
+            console.log "#{currentPos}"
+            console.log @comments.length
+            console.log $(".item").height
+            console.log "#{pos}"
+
+
+
+            # console.log @posCount
+            # console.log $(".commentList").height()
+            # @pos = $("#" + @preLastLoadedId).offset().top
+            # if @pos is @prePos
+            #   @posCount += 1
+            # if @posCount isnt 1
+            #   @pos *= @posCount
+            #   @posCount += 0.8
+            # console.log @prePos
+            # console.log @pos
+            # @prePos = @pos
+            # #console.log $("#" + @preLastLoadedId)
+            # calPos = $(".commentList").height() - @pos
+            # console.log calPos
+            # $("#history").animate({ scrollTop: calPos }, 'fast')
+            
+            
+            
           return
         return
 
