@@ -49,11 +49,11 @@ $ ->
               if val.sntdt
                 val.sntdt = moment(new Date(val.sntdt)).format "MM/DD HH:mm"
               @comments.unshift val
-            resolve()
+            resolve results
             return
           .catch (err) ->
             console.log err
-            resolve()
+            resolve []
             return
           return
 
@@ -67,18 +67,26 @@ $ ->
             return
           , 10
           return
+        # スクロールイベント
         $("#history").scroll (e) =>
           target = e.target
-          #clientHeight = target.clientHeight
-          #scrollHeight = target.scrollHeight
-          #maxScroll = scrollHeight - clientHeight
           scrollTop = target.scrollTop
-          #console.log clientHeight
-          #console.log scrollHeight
-          #console.log maxScroll
-          console.log scrollTop
+          # 一番上までスクロールした場合
           if scrollTop is 0
+            # データ取得
             @loadMore()
+            .then (data) ->
+              if data.length
+                setTimeout () ->
+                  scrollPosition = 0
+                  # 追加されたitemのheightを取得
+                  for val, index in data
+                    scrollPosition += $($(".commentList .item")[index]).height() + 6
+                  # スクロール移動
+                  $("#history").scrollTop scrollPosition
+                  return
+                , 10
+              return
           return
         return
 
