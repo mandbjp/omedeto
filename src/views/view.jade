@@ -11,7 +11,7 @@ block script
   script(type="text/v-template")#template
     #view
       .video(v-for="video in videos")
-        video(id="{{video.vid}}", :src="video.videoPath", :poster="video.imagePath", preload="none", @loadedmetadata="loadedmetadata", @ended="ended", controls)
+        video(id="{{video.vid}}", :src="video.videoPath", :poster="video.imagePath", preload="none", @loadedmetadata="loadedmetadata", @ended="ended")
         .nickname(v-text="video.nickname")
     #listLayout
       #list
