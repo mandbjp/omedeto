@@ -14,7 +14,7 @@ $ ->
     data:
       query:
         skip: 0
-        limit: 50
+        limit: 500
       videos: []
       currentVid: ""
       comments: []
