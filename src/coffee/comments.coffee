@@ -18,8 +18,11 @@ $ ->
       nickname: ""
       text: ""
       stamps: [
-        "stamp001.png","stamp002.png","stamp003.gif","stamp004.gif",
-        "stamp005.gif","stamp006.gif","stamp007.gif"
+        "stamp001.gif","stamp002.gif","stamp003.gif","stamp004.gif","stamp005.png",
+        "stamp006.png","stamp007.png","stamp008.png","stamp009.png","stamp010.png",
+        "stamp011.png","stamp012.png","stamp013.png","stamp014.png","stamp015.png",
+        "stamp016.png","stamp017.png","stamp018.png",
+        "stamp101.gif","stamp102.gif","stamp103.gif","stamp104.gif","stamp105.gif"
       ]
       comments: []
       query:
