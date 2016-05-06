@@ -169,8 +169,8 @@ $ ->
           return
         # Commentを受け取る
         primus.on "comment", (data) =>
-          width = $(window).width()
-          height = $(window).height()
+          width = $(window).width() - 100
+          height = $(window).height() - 100
           top = Math.random() * (height + 1 - 50)
           data.top = top
           # Stamp
