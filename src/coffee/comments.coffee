@@ -103,8 +103,6 @@ $ ->
             console.log $(".item").height
             console.log "#{pos}"
 
-
-
             # console.log @posCount
             # console.log $(".commentList").height()
             # @pos = $("#" + @preLastLoadedId).offset().top
