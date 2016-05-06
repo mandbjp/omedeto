@@ -26,6 +26,7 @@ $ ->
         skip: 0
         limit: 20
       stampView: false
+      scrollMode: false
     created: () ->
       db.getItem "nickname"
       .then (val) =>
@@ -73,6 +74,7 @@ $ ->
         $("#history").scroll (e) =>
           target = e.target
           scrollTop = target.scrollTop
+          #@scrollMode = true
           # 一番上までスクロールした場合
           if scrollTop is 0
             # データ取得
@@ -89,6 +91,9 @@ $ ->
                   return
                 , 10
               return
+          #else if scrollTop is $(".commentList").height()
+          #  console.log "bottom"
+          #  @scrollMode = false
           return
         return
 
@@ -152,8 +157,10 @@ $ ->
             if data.sntdt
               data.sntdt = moment(new Date(data.sntdt)).format "MM/DD HH:mm"
             @comments.push data
-            setTimeout () ->
-              $("#history").scrollTop $(".commentList").height()
+            setTimeout () =>
+              #console.log @scrollMode
+              unless @scrollMode
+                $("#history").scrollTop $(".commentList").height()
               return
             , 10
           return
