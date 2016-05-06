@@ -46,6 +46,8 @@ $ ->
           .then (results) =>
             @query.skip += results.length
             for val in results
+              unless val.nickname
+                val.nickname = "ゲスト"
               if val.sntdt
                 val.sntdt = moment(new Date(val.sntdt)).format "MM/DD HH:mm"
               @comments.unshift val
@@ -145,6 +147,8 @@ $ ->
         # Commentを受け取る
         primus.on "comment", (data) =>
           if data
+            unless data.nickname
+              data.nickname = "ゲスト"
             if data.sntdt
               data.sntdt = moment(new Date(data.sntdt)).format "MM/DD HH:mm"
             @comments.push data
