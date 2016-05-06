@@ -3,7 +3,6 @@ Promise = require("q").promise
 fs = require "fs"
 config = require("./../config").config
 child_process = require "child_process"
-ffprobe = require "node-ffprobe"
 
 
 insertFile = (filePath, fileType) ->
@@ -16,7 +15,7 @@ insertFile = (filePath, fileType) ->
 createThumbnail = (filePath) ->
   return Promise (resolve, reject) ->
     thumbnailFilePath = filePath + ".thunmbnail.jpg"
-    ffmpeg = child_process.spawn("ffmpeg", [
+    ffmpeg = child_process.spawn("avconv", [
       "-i", filePath,
       "-ss", "00:00:00.500",
       "-f", "mjpeg"
@@ -41,27 +40,37 @@ createThumbnail = (filePath) ->
 # 動画情報を取得
 collectVideoInfo = (filePath) ->
   return Promise (resolve, reject) ->
-    ffprobe filePath, (err, probeData) ->
-      if err
-        reject "node-ffprobe failed. reason: " + err
-        
+    ffmpeg = child_process.spawn("avprobe", [filePath, "-show_streams", "-show_format", "-loglevel", "warning"])
+
+    stdoutData = ""
+    ffmpeg.stdout.on "data", (data) ->
+      stdoutData += data.toString()
+
+    ffmpeg.stdout.on "close", () ->
+      # when ffmpeg is done
+      probeData = parseAvprobe stdoutData
+
       # find video stream from response and resolve information
       for stream in probeData.streams
         if stream.codec_type isnt "video"
           continue
         calcFramerate = Math.round(eval(stream.avg_frame_rate) * 100) / 100  # calculate equation with eval. eg. 29.95
         response = 
-          file: probeData.file
+          # file: probeData.file
           width: stream.width
-          height: stream.height  
+          height: stream.height
           codec_name: stream.codec_name  # video codec name. eg. h264
           duration: stream.duration  # video length in second
           framerate: calcFramerate
+          rotation: if stream['SIDEDATA:rotation'] then parseInt(stream['SIDEDATA:rotation']) else 0
         resolve response
         return
       
       # there is no video stream.
-      reject "node-ffprobe failed. there is no video stream in file."
+      reject "avprobe failed. there is no video stream in file."
+
+    ffmpeg.stderr.on "error", () ->
+      reject "error on spawning avprobe"
       
     return 
 
@@ -72,6 +81,9 @@ compressVideo = (filePath, videoInfo) ->
     width = config.video_compression.target_width
     height = multiplesOf(videoInfo.height / (videoInfo.width / config.video_compression.target_width), 4)
     resolution = "#{width}x#{height}"
+    if (((Math.abs(videoInfo.rotation) / 90)) % 2) is 1
+      # 縦長の動画
+      resolution = "#{height}x#{width}"
     
     outputFile = filePath + ".compressed.mp4"
     # command line @see http://tech.ckme.co.jp/ffmpeg.shtml
@@ -80,16 +92,16 @@ compressVideo = (filePath, videoInfo) ->
       "-b", "#{config.video_compression.bitrate}",  # bitrate as kb/s
       "-r", "#{videoInfo.framerate}",  # framerate to ...
       "-s", resolution,  # resolution to ...
-      "-vcodec", "libx264",  # codec to h264
-      "-vpre", "medium",  # h264 quality
+      # "-vcodec", "libx264",  # codec to h264
+      # "-vpre", "medium",  # h264 quality
       "-acodec", "copy",  # keep audio as is
       outputFile
       ]
-    ffmpeg = child_process.spawn("ffmpeg", ffmpegOptions)
+    ffmpeg = child_process.spawn("avconv", ffmpegOptions)
     
     rejectWithLog = (reason) ->
       console.error "ffmpeg response:"
-      console.error stderrData
+      console.error stdoutData
       console.error "options: ", ffmpegOptions.join " "
       reject reason
     
@@ -106,9 +118,9 @@ compressVideo = (filePath, videoInfo) ->
         else
           reject "compress video failed. (Unknown: #{err.code})"
       
-    stderrData = ""
-    ffmpeg.stderr.on "data", (data) ->
-      stderrData += data.toString()
+    stdoutData = ""
+    ffmpeg.stdout.on "data", (data) ->
+      stdoutData += data.toString()
 
     ffmpeg.stderr.on "error", () ->
       reject "error on spawning ffmpeg for compressVideo"
@@ -118,6 +130,73 @@ multiplesOf = (src, unit) ->
   # @see http://ginpen.com/2011/12/09/floor-to-any/
   return Math.round(src / unit) * unit 
 
+# 
+parseAvprobe = (probe) ->
+  # required response of 'avprove infile.MOV -show_streams -show_format -loglevel warning' 
+  
+  # function below originaly from node-ffprove
+  parseField = (str) ->
+    str = ('' + str).trim()
+    if str.match(/^\d+\.?\d*$/) then parseFloat(str) else str
+
+  parseBlock = (block) ->
+    block_object = {}
+    lines = block.split('\n')
+    lines.forEach (line) ->
+      data = line.split('=')
+      if data and data.length == 2
+        block_object[data[0]] = parseField(data[1])
+      return
+    block_object
+  # --
+   
+  lines = probe.split("\n")
+  block = []
+  blockName = ""
+  blocks = {}
+  for line in lines
+    if line.match /^\[(.+)\]$/
+      block = []
+      blockName = line
+
+    else if line.length is 0
+      unless blockName is ""
+        blocks[blockName.slice(1, blockName.length-1)] = parseBlock(block.join("\n"))
+    
+    else
+      block.push(line);
+
+  format = []
+  for key of blocks
+    m = key.match /^format.?(.*)/
+    unless m
+      continue
+    # m = ['format.tags', 'tags']
+    for k of blocks[key]
+      kk = if key.indexOf(".tags") isnt -1 then "TAG:" + k else k
+      format[kk] = blocks[key][k]
+
+  streams = []
+  for key of blocks
+    m = key.match /^streams\.stream.(\d).?(.*)/
+    unless m
+      continue
+
+    # m = m = ['streams.stream.0.sidedata.displaymatrix', '0', 'sidedata.displaymatrix',]
+    index = parseInt m[1]
+    if streams[index] is undefined
+      streams[index] = {}
+    
+    for k of blocks[key]
+      kk = if key.indexOf(".tags") isnt -1 then "TAG:" + k else 
+        if key.indexOf(".sidedata") isnt -1 then "SIDEDATA:" + k else k
+      streams[index][kk] = blocks[key][k]
+  
+  reponse = 
+    format: format
+    streams: streams
+  return reponse
+  
 # ファイル格納
 exports.create = (req, res) ->
   file = req.files.file
