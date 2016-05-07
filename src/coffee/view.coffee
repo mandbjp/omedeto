@@ -19,6 +19,7 @@ $ ->
       currentVid: ""
       comments: []
       stamps: []
+      pause: false
     created: () ->
       room =
         sid: "omedeto"
@@ -135,6 +136,17 @@ $ ->
             @currentVid = val.vid
           else
             val.selected = false
+        return
+
+      # 一時停止/再生
+      videoPause: (e) ->
+        pauseID = e.currentTarget.id
+        if @pause
+          $("##{pauseID}").get(0).play()
+          @pause = false
+        else
+          $("##{pauseID}").get(0).pause()
+          @pause = true
         return
 
       # WebSocket接続
